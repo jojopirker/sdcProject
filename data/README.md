@@ -1,0 +1,1 @@
+This directory contains the data. Since the data has about 500MB it is left empty on purpose and can be downloaded here: https://www.kaggle.com/tsiaras/uk-road-safety-accidents-and-vehicles

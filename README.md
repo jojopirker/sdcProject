@@ -20,6 +20,16 @@ contains all the notebooks used for data analysis etc.
 
 [The Dataset](https://www.kaggle.com/benoit72/uk-accidents-10-years-history-with-many-variables) is from Kaggle. It representscar accidents in the UK over a timeframe of about 10 years.
 
+## TODO
+
+* Descriptive Analysis
+* Train ML model (serverity ~ .)
+* Create Dash App
+* Update Frontend
+* Create Flask Backend
+* Setup Azure AppServices
+* Create Github Actions
+
 ## Deployment
 The project ~~is~~ (TODO: will be) deployed to Azure.
 

@@ -211,3 +211,6 @@ $RECYCLE.BIN/
 
 #builld folder of react
 /frontend/sd-frontend/build/*
+
+#data folder
+/data/*.csv

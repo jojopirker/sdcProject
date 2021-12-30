@@ -17,6 +17,6 @@ contains all the notebooks used for data analysis etc.
 ````
 
 ## Deployment
-The project ~~is~~ (TODO: will be) deployed to Azure
+The project ~~is~~ (TODO: will be) deployed to Azure.
 
 

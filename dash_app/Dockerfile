@@ -26,4 +26,4 @@ COPY app.py app.py
 EXPOSE 8000
 
 # app is hosted via uvicorn, note app is the file name and server the object
-CMD gunicorn app:server --bind 0.0.0.0:8000 --timeout 300 --log-level debug --worker-class gevent
+CMD gunicorn app:server --bind 0.0.0.0:8000 --timeout 300 --log-level debug

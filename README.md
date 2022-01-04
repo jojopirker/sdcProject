@@ -55,6 +55,10 @@ After building you can start the project simply via:
 ````
 docker compose up
 ````
+
+## Deployment
+The project ~~is~~ (TODO: will be) deployed to Azure.
+
 ## TODO
 
 - [x] Descriptive Analysis
@@ -68,7 +72,5 @@ docker compose up
 - [ ] Update backend with model
 
 
-## Deployment
-The project ~~is~~ (TODO: will be) deployed to Azure.
 
 

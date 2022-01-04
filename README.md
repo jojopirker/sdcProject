@@ -48,12 +48,12 @@ First you'lL need to install node.js. Then you can build the frontend. In the /f
 ```
 npm install
 ```
-
+and:
 ```
 npm run build
 ```
 
-To build all docker containers run (after substituting *user* and *token*)
+To build all docker containers run (after substituting *user* and *token*) in the root project folder:
 ````
 docker-compose build --build-arg kaggle_user=user --build-arg kaggle_token=token
 ````

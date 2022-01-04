@@ -4,6 +4,8 @@ from dash import dcc
 from dash import html
 import plotly.express as px
 from dash.dependencies import Input, Output
+import random
+p = 0.01
 
 app = dash.Dash(__name__)
 # server for deploy
@@ -11,7 +13,7 @@ server = app.server
 
 
 def get_accidents():
-    accidents_full = pd.read_csv('../data/Accidents0514.csv')
+    accidents_full = pd.read_csv('../data/Accidents0514.csv', header=0, skiprows=lambda i: i>0 and random.random() > p)
 
     for name in ['Police_Force',
      'Accident_Severity',
@@ -36,7 +38,7 @@ def get_accidents():
     return accidents_full
 
 def get_vehicles():
-    vehicles_full = pd.read_csv('../data/Vehicles0514.csv')
+    vehicles_full = pd.read_csv('../data/Vehicles0514.csv', header=0, skiprows=lambda i: i>0 and random.random() > p)
 
     for name in ['Vehicle_Type',
                  'Towing_and_Articulation',
@@ -109,10 +111,6 @@ app.layout = html.Div(children=[
 ])
 
 
-switcher = {
-        "/page-2": build_page_2
-    }
-
 def get_path_function(argument):
     func = switcher.get(argument, build_default)
     return func(argument)
@@ -143,6 +141,10 @@ def build_page_2(pathname):
     ),
         html.H3('You are on page {}'.format(pathname))
     ])
+
+switcher = {
+        "/page-2": build_page_2
+    }
 
 @app.callback(dash.dependencies.Output('line-graph-page2', 'figure'),
               [Input(component_id='date-picker-page2', component_property='start_date'),

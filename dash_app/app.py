@@ -3,6 +3,12 @@ import dash
 from dash import dcc
 from dash import html
 import plotly.express as px
+from dash.dependencies import Input, Output
+
+app = dash.Dash(__name__)
+# server for deploy
+server = app.server
+
 
 def get_accidents():
     accidents_full = pd.read_csv('../data/Accidents0514.csv')
@@ -28,6 +34,27 @@ def get_accidents():
      'Did_Police_Officer_Attend_Scene_of_Accident']:
         accidents_full = read_and_join_description(accidents_full, name)
     return accidents_full
+
+def get_vehicles():
+    vehicles_full = pd.read_csv('../data/Vehicles0514.csv')
+
+    for name in ['Vehicle_Type',
+                 'Towing_and_Articulation',
+                 'Vehicle_Manoeuvre',
+                 'Vehicle_Location-Restricted_Lane',
+                 'Junction_Location',
+                 'Skidding_and_Overturning',
+                 'Hit_Object_in_Carriageway',
+                 'Vehicle_Leaving_Carriageway',
+                 'Hit_Object_off_Carriageway',
+                 '1st_Point_of_Impact',
+                 'Was_Vehicle_Left_Hand_Drive?',
+                 'Journey_Purpose_of_Driver',
+                 'Sex_of_Driver',
+                 'Age_Band_of_Driver',
+                 'Propulsion_Code']:
+        vehicles_full = read_and_join_description(vehicles_full, name)
+    return vehicles_full
 
 def read_and_join_description(df, col_name):
     col_name_new = col_name.replace('_',' ')
@@ -61,58 +88,82 @@ def read_and_join_description(df, col_name):
     return final_df
 
 accidents = get_accidents()
-
-
-df = pd.DataFrame({
-    "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-    "Amount": [4, 1, 2, 2, 4, 5],
-    "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
-})
-
-fig = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
-
-
-app = dash.Dash(__name__)
-
-# server for deploy
-server = app.server
+vehicles = get_vehicles()
+accidents['accident_time'] = pd.to_datetime(accidents['Date']+' '+accidents['Time'])
+accidents_ts = accidents.copy()
+accidents_ts.set_index('accident_time', drop=True, inplace=True)
+accidents_monthly = accidents_ts.resample('M').agg({'Accident_Index':'size'})
+accidents_monthly['Moving Average'] = accidents_monthly.rolling(window=5).mean()
 
 app.layout = html.Div(children=[
-    html.H1(children='Hello Dash'),
+    html.H1(children='UK Accidents Dashboard'),
 
-    html.Div(children='''
-        Dash: A web application framework for your data.
-    '''),
-
-
-    
-        # represents the URL bar, doesn't render anything
     dcc.Location(id='url', refresh=False),
 
     dcc.Link('Navigate to "/"', href='/'),
     html.Br(),
     dcc.Link('Navigate to "/page-2"', href='/page-2'),
 
-    # content will be rendered in this element
     html.Div(id='page-content')
     
 ])
+
+
+switcher = {
+        "/page-2": build_page_2
+    }
+
+def get_path_function(argument):
+    func = switcher.get(argument, build_default)
+    return func(argument)
+
 
 @app.callback(dash.dependencies.Output('page-content', 'children'),
               [dash.dependencies.Input('url', 'pathname')])
 def display_page(pathname):
     print(pathname)
-    if(pathname == "/page-2"):
-        return html.Div([
-                dcc.Graph(
-            id='example-graph',
-            figure=fig
-        ),
-            html.H3('You are on page {}'.format(pathname))
-        ])
+    return get_path_function(pathname)
+
+def build_default(pathname):
     return html.Div([
             html.H3('You are on page {}'.format(pathname))
         ])
 
+def build_page_2(pathname):
+    return html.Div([
+        dcc.DatePickerRange(
+            id='date-picker-page2',
+            min_date_allowed=accidents_monthly.index.min(),
+            max_date_allowed=accidents_monthly.index.max(),
+            start_date=accidents_monthly.index.min(),
+            end_date=accidents_monthly.index.max()
+        ),
+        dcc.Graph(
+        id='line-graph-page2'
+    ),
+        html.H3('You are on page {}'.format(pathname))
+    ])
+
+@app.callback(dash.dependencies.Output('line-graph-page2', 'figure'),
+              [Input(component_id='date-picker-page2', component_property='start_date'),
+               Input(component_id='date-picker-page2', component_property='end_date')])
+def build_accident_line_chart(start_date, end_date):
+    accidents_monthly_cache = accidents_monthly[start_date:end_date]
+    accidents_monthly_cache.rename(columns={'Accident_Index':'Amount of Accidents'}, inplace=True)
+    fig = px.line(
+        data_frame = accidents_monthly_cache,
+        x=accidents_monthly_cache.index,
+        y=['Amount of Accidents','Moving Average']
+    )
+    
+    fig.update_layout(
+        title="Monthly number of accidents with 5 month moving average",
+        xaxis_title="Time",
+        yaxis_title="Number of Accidents",
+        legend_title="Legend"
+    )
+    return fig
+
+    
 if __name__ == '__main__':
     app.run_server()

@@ -9,7 +9,6 @@ app = FastAPI()
 def read_root():
     return {"Hello": "World"}
 
-# here should go the model
 @app.post("/items/{item_id}")
 def ask_model(item_id:int):
     return {"test"}

@@ -20,6 +20,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "start:local": "env-cmd -f ./environments/.local.env react-scripts start",
     "build:local": "env-cmd -f ./environments/.local.env npm run-script build",
     "build:prod": "env-cmd -f ./environments/.prod.env npm run-script build"
   },

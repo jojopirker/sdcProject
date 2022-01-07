@@ -25,6 +25,7 @@ jobs:
         working-directory: ./frontend/sdc-frontend
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
+      working-directory: ./frontend/sdc-frontend
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'

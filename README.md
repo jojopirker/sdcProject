@@ -72,13 +72,13 @@ The project ~~is~~ (TODO: will be) deployed to Azure.
 ## TODO
 
 - [x] Descriptive Analysis
-- [ ] Train ML model (serverity ~ .)
+- [x] Train ML model (serverity ~ .)
 - [x] Create Dash App
 - [x] Update Frontend
 - [x] Create Flask Backend
+- [x] Create Github Actions
+- [x] Update Dash App
 - [ ] Setup Azure AppServices
-- [ ] Create Github Actions
-- [ ] Update Dash App
 - [ ] Update backend with model
 
 

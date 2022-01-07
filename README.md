@@ -4,6 +4,12 @@
 
 This is the Github Page for our SDC Project.
 
+__Pipline Status__
+
+![Frontend](https://github.com/ds20m007/sdcProject/actions/workflows/frontend_build.yml/badge.svg)
+![Dashboard](https://github.com/ds20m007/sdcProject/actions/workflows/dash_app_build.yml/badge.svg)
+![Backend](https://github.com/ds20m007/sdcProject/actions/workflows/backend_build.yml/badge.svg)
+
 **Build with:**
 
 [![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org/)
@@ -23,25 +29,31 @@ This is the Github Page for our SDC Project.
 
 [![Nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white)](https://www.nginx.com/)
 
-## General
-
-The structure of this repo is the following:
-````
--- backend
-contains all the files for our backend
--- frontend
-contains all our frontend files
--- dash_app
-contains the dash app, which is integrated into our frontend
--- data
-empty folder for local usage, see /data/README.md
--- notebooks
-contains all the notebooks used for data analysis etc. 
-````
 
 ## Data
 
 [The Dataset](https://www.kaggle.com/benoit72/uk-accidents-10-years-history-with-many-variables) is from Kaggle. It representscar accidents in the UK over a timeframe of about 10 years.
+
+## Deployment
+
+![Deployment](https://github.com/ds20m007/sdcProject/blob/main/etc/infrastructure.jpeg)
+
+The project ~~is~~ (TODO: will be) deployed to Azure.
+
+## Project Structure
+
+The structure of this repo is the following:
+
+#### /backend
+contains all the files for our backend
+#### /frontend
+contains all our frontend files
+#### /dash_app
+contains the dash app, which is integrated into our frontend
+#### /data
+empty folder for local usage, see /data/README.md
+#### /notebooks
+contains all the notebooks used for data analysis etc. 
 
 ## Build
 First you'll need to install node.js. Then you can build the frontend. In the **/frontend/sdc-frontend/** folder run:
@@ -66,8 +78,7 @@ docker compose up
 
 And point your browser to *localhost*
 
-## Deployment
-The project ~~is~~ (TODO: will be) deployed to Azure.
+
 
 ## TODO
 

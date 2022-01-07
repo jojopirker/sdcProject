@@ -99,7 +99,7 @@ accidents_monthly = accidents_ts.resample('M').agg({'Accident_Index':'size'})
 accidents_monthly['Moving Average'] = accidents_monthly.rolling(window=5).mean()
 
 app.layout = html.Div(children=[
-    #html.H1(children='UK Accidents Dashboard'),
+    #html.H1(children='UK Accidents Dashboard'), class add
     dcc.Location(id='url', refresh=False),
     #dcc.Link('Navigate to "/"', href='/'),
     #html.Br(),

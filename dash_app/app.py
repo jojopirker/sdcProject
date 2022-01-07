@@ -4,10 +4,11 @@ from dash import dcc
 from dash import html
 import plotly.express as px
 from dash.dependencies import Input, Output
+import dash_bootstrap_components as dbc
 import random
 p = 0.01
 
-app = dash.Dash(__name__)
+app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 # server for deploy
 server = app.server
 
@@ -98,23 +99,17 @@ accidents_monthly = accidents_ts.resample('M').agg({'Accident_Index':'size'})
 accidents_monthly['Moving Average'] = accidents_monthly.rolling(window=5).mean()
 
 app.layout = html.Div(children=[
-    html.H1(children='UK Accidents Dashboard'),
-
+    #html.H1(children='UK Accidents Dashboard'),
     dcc.Location(id='url', refresh=False),
-
-    dcc.Link('Navigate to "/"', href='/'),
-    html.Br(),
-    dcc.Link('Navigate to "/page-2"', href='/page-2'),
-
+    #dcc.Link('Navigate to "/"', href='/'),
+    #html.Br(),
+    #dcc.Link('Navigate to "/page-2"', href='/page-2'),
     html.Div(id='page-content')
-    
 ])
-
 
 def get_path_function(argument):
     func = switcher.get(argument, build_default)
     return func(argument)
-
 
 @app.callback(dash.dependencies.Output('page-content', 'children'),
               [dash.dependencies.Input('url', 'pathname')])
@@ -124,8 +119,8 @@ def display_page(pathname):
 
 def build_default(pathname):
     return html.Div([
-            html.H3('You are on page {}'.format(pathname))
-        ])
+        html.H3('You are on page {}'.format(pathname)),
+    ])
 
 def build_page_2(pathname):
     return html.Div([
@@ -137,34 +132,67 @@ def build_page_2(pathname):
             end_date=accidents_monthly.index.max()
         ),
         dcc.Graph(
-        id='line-graph-page2'
-    ),
+            id='line-graph-page2'
+        ),
+        # MAP WITH INCIDENTS PER DISTRICT
+        dcc.Graph(
+            id='map-graph-occurances', figure={}
+        ),
+        # Relation of Speed Limit and Number of Casualaties
+        dcc.Graph(
+            id='relation-speedlimit-casualties-1', figure={}
+        ),
+        dcc.Graph(
+            id='relation-speedlimit-casualties-2', figure={}
+        ),
         html.H3('You are on page {}'.format(pathname))
     ])
 
 switcher = {
-        "/page-2": build_page_2
-    }
+    "/page-2": build_page_2
+}
 
-@app.callback(dash.dependencies.Output('line-graph-page2', 'figure'),
+@app.callback([Output('line-graph-page2', 'figure'),
+                Output('map-graph-occurances', 'figure'),
+                Output('relation-speedlimit-casualties-1', 'figure'),
+                Output('relation-speedlimit-casualties-2', 'figure')],
               [Input(component_id='date-picker-page2', component_property='start_date'),
                Input(component_id='date-picker-page2', component_property='end_date')])
 def build_accident_line_chart(start_date, end_date):
     accidents_monthly_cache = accidents_monthly[start_date:end_date]
     accidents_monthly_cache.rename(columns={'Accident_Index':'Amount of Accidents'}, inplace=True)
+
     fig = px.line(
         data_frame = accidents_monthly_cache,
         x=accidents_monthly_cache.index,
         y=['Amount of Accidents','Moving Average']
     )
-    
     fig.update_layout(
         title="Monthly number of accidents with 5 month moving average",
         xaxis_title="Time",
         yaxis_title="Number of Accidents",
         legend_title="Legend"
     )
-    return fig
+
+    accidents_cache = accidents_ts[start_date:end_date]
+    fig_map = px.scatter_geo(
+        data_frame=accidents_cache,
+        lat="Latitude",
+        lon="Longitude"
+    )
+    fig_rel_speed_casualties = px.scatter(accidents_cache.nlargest(20, 'Number_of_Casualties'), 
+                 x="Number_of_Casualties", 
+                 y="Speed_limit",
+                color = "Number_of_Vehicles",
+                text="1st_Road_Number")
+
+    accidents_small = accidents_cache[['Day_of_Week','Number_of_Casualties','Speed_limit']].groupby(['Speed_limit','Day_of_Week'],as_index=False).sum()
+    accidents_small['Day_of_Week'] = pd.Categorical(accidents_small['Day_of_Week'] , ['Monday', 'Tuesday', 'Wednesday','Thursday','Friday','Saturday','Sunday'])
+    accidents_small = accidents_small.pivot(index='Speed_limit', columns='Day_of_Week', values='Number_of_Casualties')
+
+    fig_acc_small = px.imshow(accidents_small)
+
+    return fig, fig_map, fig_rel_speed_casualties, fig_acc_small
 
     
 if __name__ == '__main__':

@@ -3,10 +3,10 @@ name: Build Dash-App
 on:
   push:
     branches: [ main ]
-    paths: ./dash_app
+    paths: /dash_app
   pull_request:
     branches: [ main ]
-    paths: ./dash_app
+    paths: /dash_app
 
 jobs:
 

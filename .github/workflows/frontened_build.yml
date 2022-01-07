@@ -25,13 +25,15 @@ jobs:
         working-directory: ./frontend/sdc-frontend
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
-      working-directory: ./frontend/sdc-frontend
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - name: node install
+      working-directory: ./frontend/sdc-frontend
     - run: npm ci
+    - name: node build
+      working-directory: ./frontend/sdc-frontend
     - run: npm run build:prod --if-present
-    - run: npm test
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:

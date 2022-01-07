@@ -1,0 +1,57 @@
+name: Build Dash-App
+
+on:
+  push:
+    branches: [ main ]
+    paths: ./dash_app
+  pull_request:
+    branches: [ main ]
+    paths: ./dash_app
+
+jobs:
+
+  build-container:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+    - name: Build container and export
+      uses: docker/build-push-action@v2
+      with:
+          context: ./dash_app
+          tags: ds20m007/sdc-dash_app:${{ github.sha }}
+          outputs: type=docker,dest=/tmp/sdc-dash_app.tar
+          build-args: |
+            kaggle_user=${{secrets.KAGGLE_USER}}
+            kaggle_token=${{secrets.KAGGLE_KEY}} 
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+          name: sdc-dash_app
+          path: /tmp/sdc-dash_app.tar
+  publish:
+    runs-on: ubuntu-latest
+    needs: build-container
+    steps:      
+      - name: Docker Login
+        uses: docker/login-action@v1.10.0
+        with:
+          username: ds20m007
+          password: ${{ secrets.dockerhub_password }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Download container artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: sdc-dash_app
+          path: /tmp
+      - name: Load image
+        run: |
+          docker load --input /tmp/sdc-dash_app.tar
+          docker image ls -a
+      - name: Publish to dockerhub
+        run: |
+          docker push ds20m007/sdc-dash_app:${{ github.sha }}

@@ -1,0 +1,54 @@
+name: Build Backend
+
+on:
+  push:
+    branches: [ main ]
+    paths: ./backend
+  pull_request:
+    branches: [ main ]
+    paths: ./backend
+    
+jobs:
+
+  build-container:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+    - name: Build container and export
+      uses: docker/build-push-action@v2
+      with:
+          context: ./backend
+          tags: ds20m007/sdc-backend:${{ github.sha }}
+          outputs: type=docker,dest=/tmp/sdc-backend.tar
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+          name: sdc-backend
+          path: /tmp/sdc-backend.tar
+  publish:
+    runs-on: ubuntu-latest
+    needs: build-container
+    steps:      
+      - name: Docker Login
+        uses: docker/login-action@v1.10.0
+        with:
+          username: ds20m007
+          password: ${{ secrets.dockerhub_password }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Download container artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: sdc-backend
+          path: /tmp
+      - name: Load image
+        run: |
+          docker load --input /tmp/sdc-backend.tar
+          docker image ls -a
+      - name: Publish to dockerhub
+        run: |
+          docker push ds20m007/sdc-backend:${{ github.sha }}

@@ -6,10 +6,12 @@ name: Build Frontened
 on:
   push:
     branches: [ main ]
-    paths: ./frontend
+    paths: 
+    - "frontend/**"
   pull_request:
     branches: [ main ]
-    paths: ./frontend
+    paths:
+    - "frontend/**"
 
 jobs:
   build-react_app:

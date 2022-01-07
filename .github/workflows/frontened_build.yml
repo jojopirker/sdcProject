@@ -30,10 +30,10 @@ jobs:
         cache: 'npm'
     - name: node install
       working-directory: ./frontend/sdc-frontend
-    - run: npm ci
+      run: npm ci
     - name: node build
       working-directory: ./frontend/sdc-frontend
-    - run: npm run build:prod --if-present
+      run: npm run build:prod --if-present
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:

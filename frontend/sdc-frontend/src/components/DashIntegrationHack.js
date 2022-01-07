@@ -16,8 +16,9 @@ export const DashIntegration = ({ route }) => {
                 <Spinner animation="border" />
             </>}
         <Container>
-            <iframe src={`http://127.0.0.1:8050/${route}`}
+            <iframe src={`${process.env.dash_app}}/${route}`}
                 style={{ width: "100%", height: "75vh" }}
+                title="This is the frame for the dashoard" 
                 onLoad={() => { setLoading(false) }} /> {/**todo change url**/}
         </Container>
 

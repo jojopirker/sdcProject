@@ -44,16 +44,16 @@ contains all the notebooks used for data analysis etc.
 [The Dataset](https://www.kaggle.com/benoit72/uk-accidents-10-years-history-with-many-variables) is from Kaggle. It representscar accidents in the UK over a timeframe of about 10 years.
 
 ## Build
-First you'lL need to install node.js. Then you can build the frontend. In the /frontend/sdc-frontend/ folder run:
+First you'll need to install node.js. Then you can build the frontend. In the **/frontend/sdc-frontend/** folder run:
 ```
 npm install
 ```
-and:
+and (for *local* testing, for production substitute *local* for *prod*)
 ```
-npm run build
+npm run build:local
 ```
 
-To build all docker containers run (after substituting *user* and *token*) in the root project folder:
+To build all docker containers run (after substituting *user* and *token*) in the **root project folder**:
 ````
 docker-compose build --build-arg kaggle_user=user --build-arg kaggle_token=token
 ````
@@ -63,6 +63,8 @@ After building you can start the project simply via:
 ````
 docker compose up
 ````
+
+And point your browser to *localhost*
 
 ## Deployment
 The project ~~is~~ (TODO: will be) deployed to Azure.

@@ -24,7 +24,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
           context: ./dash_app
-          tags: ds20m007/sdc-dash_app:${{ github.sha }}
+          tags: ds20m007/sdc-dash_app
           outputs: type=docker,dest=/tmp/sdc-dash_app.tar
           build-args: |
             kaggle_user=${{secrets.KAGGLE_USER}}
@@ -56,4 +56,4 @@ jobs:
           docker image ls -a
       - name: Publish to dockerhub
         run: |
-          docker push ds20m007/sdc-dash_app:${{ github.sha }}
+          docker push ds20m007/sdc-dash_app

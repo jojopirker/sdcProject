@@ -70,6 +70,16 @@ docker compose up
 
 And point your browser to *localhost*
 
+## Known Problems
+
+### Dash-App Building Process
+Error-Code | Details | Solution
+--- | --- | ---
+401 | The credentials are wrong. | -
+403 | The credentials are wrong. | -
+404 | The dataset cannot be found on kaggle. | Run the build again.  
+416 | The contigent for downloading the dataset was already used. | The process needs to be run again the next day.
+
 ## TODO
 
 - [x] Descriptive Analysis

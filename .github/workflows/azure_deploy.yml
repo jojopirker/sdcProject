@@ -20,4 +20,4 @@ jobs:
         with:
           azcliversion: 2.30.0
           inlineScript: |
-            az webapp update -g ${{ secrets.AZURE_RESOURCE_GROUP }} -n ${{ secrets.AZURE_RESOURCE_NAME }} --multicontainer-config-type compose --multicontainer-config-file docker-compose.yml
+            az webapp config container set --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name ${{ secrets.AZURE_RESOURCE_NAME }} --multicontainer-config-type compose --multicontainer-config-file docker-compose.yml

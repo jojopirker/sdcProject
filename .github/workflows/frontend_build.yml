@@ -48,24 +48,17 @@ jobs:
        with:
           name: frontend
           path: ./frontend/sdc-frontend/build
-     - name: Build container #and export
+     - name: Build container and export
        uses: docker/build-push-action@v2
        with:
           context: ./frontend
           tags: ds20m007/sdc-frontend:latest
-          load: true
-#          outputs: type=image,dest=/tmp/sdc-frontend.tar
-     - name: Inspect built containers
-       run: |
-          docker image inspect myimage:latest
-     - name: Export container
-       run : |
-          docker save ds20m007/sdc-frontend:latest | gzip > sdc-frontend.tar.gz
+          outputs: type=image,dest=/tmp/sdc-frontend.tar
      - name: Upload artifact
        uses: actions/upload-artifact@v2
        with:
           name: sdc-frontend
-          path: /tmp/sdc-frontend.tar.gz
+          path: /tmp/sdc-frontend.tar
           
   publish:
     runs-on: ubuntu-latest
@@ -85,7 +78,7 @@ jobs:
           path: /tmp
       - name: Load image
         run: |
-          docker load --input /tmp/sdc-frontend.tar.gz
+          docker load --input /tmp/sdc-frontend.tar
           docker image ls -a
       - name: Publish to dockerhub
         run: |

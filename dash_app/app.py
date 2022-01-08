@@ -6,6 +6,7 @@ import plotly.express as px
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 import random
+# percentage of data points
 p = 0.01
 
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])

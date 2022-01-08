@@ -124,6 +124,8 @@ def build_default(pathname):
 
 def build_page_2(pathname):
     return html.Div([
+        html.H1(children='Accidents Dashoard'),
+        ## ACCIDENTS
         dcc.DatePickerRange(
             id='date-picker-page2',
             min_date_allowed=accidents_monthly.index.min(),
@@ -145,20 +147,33 @@ def build_page_2(pathname):
         dcc.Graph(
             id='relation-speedlimit-casualties-2', figure={}
         ),
+        ## VEHICLES
+        # Vehicles Driver Age/sex Histogram
+        dcc.Graph(
+            id='vehicles-hist', figure={}
+        ),
+        # Engine Capacity
+        dcc.Graph(
+            id='vehicles-capacity', figure={}
+        ),
         html.H3('You are on page {}'.format(pathname))
     ])
 
 switcher = {
+    "/page-1": build_default,
     "/page-2": build_page_2
 }
 
 @app.callback([Output('line-graph-page2', 'figure'),
                 Output('map-graph-occurances', 'figure'),
                 Output('relation-speedlimit-casualties-1', 'figure'),
-                Output('relation-speedlimit-casualties-2', 'figure')],
+                Output('relation-speedlimit-casualties-2', 'figure'),
+                Output('vehicles-hist', 'figure'),
+                Output('vehicles-capacity', 'figure')],
               [Input(component_id='date-picker-page2', component_property='start_date'),
                Input(component_id='date-picker-page2', component_property='end_date')])
 def build_accident_line_chart(start_date, end_date):
+    # ACCIDENTS
     accidents_monthly_cache = accidents_monthly[start_date:end_date]
     accidents_monthly_cache.rename(columns={'Accident_Index':'Amount of Accidents'}, inplace=True)
 
@@ -192,7 +207,20 @@ def build_accident_line_chart(start_date, end_date):
 
     fig_acc_small = px.imshow(accidents_small)
 
-    return fig, fig_map, fig_rel_speed_casualties, fig_acc_small
+    # VEHICLES
+    fig_hist = px.histogram(vehicles[vehicles["Age_of_Driver"]>0], 
+                   x="Age_of_Driver", 
+                  color="Sex_of_Driver",
+                  nbins=12)
+
+    fig_capacity = px.scatter(vehicles[vehicles['Age_of_Vehicle']>=0].sample(1000, random_state=1), # NEEDS TO BE ADAPTED
+                 x="Age_of_Driver", 
+                 y="Engine_Capacity_(CC)", 
+                 color="Vehicle_Type", 
+                 size='Age_of_Vehicle',
+                 symbol="Sex_of_Driver")
+
+    return fig, fig_map, fig_rel_speed_casualties, fig_acc_small, fig_hist, fig_capacity
 
     
 if __name__ == '__main__':

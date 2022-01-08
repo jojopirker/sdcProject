@@ -53,7 +53,7 @@ jobs:
        with:
           context: ./frontend
           tags: ds20m007/sdc-frontend:latest
-          outputs: type=image,dest=/tmp/sdc-frontend.tar
+          outputs: type=docker,dest=/tmp/sdc-frontend.tar
      - name: Upload artifact
        uses: actions/upload-artifact@v2
        with:

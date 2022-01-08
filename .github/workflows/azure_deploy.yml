@@ -2,10 +2,7 @@ name: Azure Deploy
 
 on:
   workflow_run:
-    workflows: |
-      Build Backend
-      Build Dash-App
-      Build Frontend
+    workflows: ["Build Backend","Build Dash-App","Build Frontend"]
     branches: master
     types: completed
 

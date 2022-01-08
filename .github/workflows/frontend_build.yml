@@ -56,7 +56,7 @@ jobs:
           load: true
      - name: Inspect built containers
        run: |
-          docker image inspect myimage:latest
+          docker image inspect ds20m007/sdc-frontend:latest
      - name: Export container
        run : |
           docker save ds20m007/sdc-frontend:latest | gzip > sdc-frontend.tar.gz

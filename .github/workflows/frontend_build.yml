@@ -48,12 +48,13 @@ jobs:
        with:
           name: frontend
           path: ./frontend/sdc-frontend/build
-     - name: Build container
+     - name: Build container #and export
        uses: docker/build-push-action@v2
        with:
           context: ./frontend
           tags: ds20m007/sdc-frontend:latest
           load: true
+#          outputs: type=image,dest=/tmp/sdc-frontend.tar
      - name: Inspect built containers
        run: |
           docker image inspect myimage:latest

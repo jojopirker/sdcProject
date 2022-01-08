@@ -1,6 +1,6 @@
 /**
  * 
- * @returns APIOverview Component
+ * @returns APIOverview
  */
 const APIOverview = () => {
     <>

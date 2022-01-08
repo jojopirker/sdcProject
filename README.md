@@ -29,28 +29,23 @@ __Pipline Status__
 
 ## Data
 
-[The Dataset](https://www.kaggle.com/benoit72/uk-accidents-10-years-history-with-many-variables) is from Kaggle. It representscar accidents in the UK over a timeframe of about 10 years.
+[The Dataset](https://www.kaggle.com/benoit72/uk-accidents-10-years-history-with-many-variables) is from Kaggle. It represents car accidents in the UK over a time-frame of about 10 years.
 
 ## Deployment
 
 ![Deployment](https://github.com/ds20m007/sdcProject/blob/main/etc/infrastructure.jpeg)
 
-The project ~~is~~ (TODO: will be) deployed to Azure.
-
 ## Project Structure
 
 The structure of this repo is the following:
 
-#### /backend
-contains all the files for our backend
-#### /frontend
-contains all our frontend files
-#### /dash_app
-contains the dash app, which is integrated into our frontend
-#### /data
-empty folder for local usage, see /data/README.md
-#### /notebooks
-contains all the notebooks used for data analysis etc. 
+Folder | Details  
+--- | ---
+/backend | contains all the files for our backend
+/frontend | contains all our frontend files 
+/dash_app | contains the dash app, which is integrated into our frontend 
+/data | empty folder for local usage, see /data/README.md 
+/notebooks | contains all the notebooks used for data analysis etc. 
 
 ## Build
 First you'll need to install node.js. Then you can build the frontend. In the **/frontend/sdc-frontend/** folder run:
@@ -74,8 +69,6 @@ docker compose up
 ````
 
 And point your browser to *localhost*
-
-
 
 ## TODO
 

@@ -79,6 +79,7 @@ And point your browser to *localhost*
 - [x] Create Flask Backend
 - [x] Create Github Actions
 - [ ] Update Dash App
+- [ ] Add Filters to Dash App
 - [ ] Setup Azure AppServices
 - [ ] Update backend with model
 

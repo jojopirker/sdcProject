@@ -10,18 +10,16 @@ export const DashIntegration = ({ route }) => {
     const [loading, setLoading] = useState(true);
 
     return (<>
-        <h2>Dashboard</h2>
+        <Container>
         {loading &&
             <>Loading may take time...
                 <Spinner animation="border" />
             </>}
-        <Container>
             <iframe src={`${process.env.REACT_APP_DASH_APP}/${route}`}
                 style={{ width: "100%", height: "75vh" }}
                 title="This is the frame for the dashoard" 
                 onLoad={() => { setLoading(false) }} /> {/**todo change url**/}
         </Container>
-
     </>)
 }
 

@@ -2,16 +2,16 @@ version: "3.9"  # optional since v1.27.0
 services:
   backend:
     build: backend
-    image: backend:latest
+    image: ds20m007/sdc-backend:latest
     ports:
       - "8082:8000"
   dash_app:
     build: dash_app
-    image: dash_app:latest
+    image: ds20m007/sdc-dash_app:latest
     ports:
       - "8050:8000"
   frontend:
     build: frontend
-    image: frontend:latest
+    image: ds20m007/sdc-frontend:latest
     ports:
       - "80:80"

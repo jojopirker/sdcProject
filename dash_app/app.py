@@ -160,7 +160,6 @@ def build_page_2(pathname):
     ])
 
 switcher = {
-    "/page-1": build_default,
     "/page-2": build_page_2
 }
 

@@ -78,7 +78,7 @@ And point your browser to *localhost*
 - [x] Update Frontend
 - [x] Create Flask Backend
 - [x] Create Github Actions
-- [x] Update Dash App
+- [ ] Update Dash App
 - [ ] Setup Azure AppServices
 - [ ] Update backend with model
 

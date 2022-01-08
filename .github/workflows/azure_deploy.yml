@@ -1,0 +1,35 @@
+name: Azure Deploy
+
+on:
+  workflow_run:
+    workflows: |
+      Build Backend
+      Build Dash-App
+      Build Frontend
+    branches: master
+    types: completed
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy script
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.30.0
+          inlineScript: |
+            az webapp update -g ${{ secrets.AZURE_RESOURCE_GROUP }} -n ${{ secrets.AZURE_RESOURCE_NAME }} --multicontainer-config-type compose --multicontainer-config-file docker-compose.yml

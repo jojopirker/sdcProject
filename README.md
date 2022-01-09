@@ -90,7 +90,7 @@ Error-Code | Details | Solution
 - [x] Create Github Actions
 - [ ] Update Dash App
 - [ ] Add Filters to Dash App
-- [ ] Setup Azure AppServices
+- [x] Setup Azure AppServices
 - [ ] Update backend with model
 
 

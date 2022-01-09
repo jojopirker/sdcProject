@@ -60,8 +60,6 @@ npm run build:local
 Sidenote: Since env-cmd is used this command will not work on standard Windows cmd or Powershell. Execute the following commands prior to solve this:
 
 ```
-npm config set script-shell "C:\Program Files\git\bin\bash.exe" 
-
 npm update
 
 npm install dotenv --save

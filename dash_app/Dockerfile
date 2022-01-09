@@ -24,6 +24,6 @@ RUN pip install -r requirements.txt
 COPY app.py app.py
 
 EXPOSE 8000
-
 # app is hosted via uvicorn, note app is the file name and server the object
-CMD gunicorn app:server --bind 0.0.0.0:8000 --timeout 300 --log-level debug
+# forwarded_allow-ips is potentially dangerous, but behind azures firewall it hopefully is safe
+CMD gunicorn app:server --bind 0.0.0.0:8000 --timeout 300 --forwarded-allow-ips '*' --log-level 'debug'

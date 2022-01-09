@@ -10,7 +10,7 @@ npm run build:local
 
 Then it is possilbe to build the docker container with
 ````
-docker build . -t frontend:latest
+docker build . -t ds20m007/frontend:latest
 ````
 
 ## Run

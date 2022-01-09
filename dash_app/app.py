@@ -8,8 +8,8 @@ import dash_bootstrap_components as dbc
 import random
 # percentage of data points
 p = 0.01
-
-app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
+base_path = "/dash/"
+app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], url_base_pathname=base_path)
 # server for deploy
 server = app.server
 
@@ -91,6 +91,14 @@ def read_and_join_description(df, col_name):
     final_df.columns = final_df.columns.str.replace('_label','')
     return final_df
 
+#####################
+##
+##
+## Data preparation
+##
+##
+##
+#####################
 accidents = get_accidents()
 vehicles = get_vehicles()
 accidents['accident_time'] = pd.to_datetime(accidents['Date']+' '+accidents['Time'])
@@ -99,6 +107,7 @@ accidents_ts.set_index('accident_time', drop=True, inplace=True)
 accidents_monthly = accidents_ts.resample('M').agg({'Accident_Index':'size'})
 accidents_monthly['Moving Average'] = accidents_monthly.rolling(window=5).mean()
 
+######## Layout 
 app.layout = html.Div(children=[
     #html.H1(children='UK Accidents Dashboard'), class add
     dcc.Location(id='url', refresh=False),
@@ -160,10 +169,6 @@ def build_page_2(pathname):
         html.H3('You are on page {}'.format(pathname))
     ])
 
-switcher = {
-    "/page-2": build_page_2
-}
-
 @app.callback([Output('line-graph-page2', 'figure'),
                 Output('map-graph-occurances', 'figure'),
                 Output('relation-speedlimit-casualties-1', 'figure'),
@@ -222,6 +227,9 @@ def build_accident_line_chart(start_date, end_date):
 
     return fig, fig_map, fig_rel_speed_casualties, fig_acc_small, fig_hist, fig_capacity
 
-    
+switcher = {
+    base_path+"page-2": build_page_2
+} 
+
 if __name__ == '__main__':
     app.run_server()

@@ -14,12 +14,12 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={
-            <GeneralInformation/>} />
+            <GeneralInformation />} />
           <Route path="/dash-1" element={
             <DashIntegration route={"page-1"} />} />
           <Route path="/dash-2" element={
             <DashIntegration route={"page-2"} />} />
-        <Route path="/apiOverview" element={
+          <Route path="/apiOverview" element={
             <APIOverview />} />
         </Routes>
       </BrowserRouter>

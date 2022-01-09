@@ -65,7 +65,7 @@ docker-compose build --build-arg kaggle_user=user --build-arg kaggle_token=token
 ## Run
 After building you can start the project simply via:
 ````
-docker compose up
+docker-compose up
 ````
 
 And point your browser to *localhost*

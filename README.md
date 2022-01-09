@@ -57,6 +57,16 @@ and (for *local* testing, for production substitute *local* for *prod*)
 npm run build:local
 ```
 
+Sidenote: Since env-cmd is used this command will not work on standard Windows cmd or Powershell. Execute the following commands prior to solve this:
+
+```
+npm config set script-shell "C:\Program Files\git\bin\bash.exe" 
+
+npm update
+
+npm install dotenv --save
+```
+
 To build all docker containers run (after substituting *user* and *token*) in the **root project folder**:
 ````
 docker-compose build --build-arg kaggle_user=user --build-arg kaggle_token=token

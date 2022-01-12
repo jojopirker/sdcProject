@@ -67,13 +67,13 @@ npm install dotenv --save
 
 To build all docker containers run (after substituting *user* and *token*) in the **root project folder**:
 ````
-docker-compose build --build-arg kaggle_user=user --build-arg kaggle_token=token
+docker compose build --build-arg kaggle_user=user --build-arg kaggle_token=token
 ````
 
 ## Run
 After building you can start the project simply via:
 ````
-docker-compose up
+docker compose up
 ````
 
 And point your browser to *localhost*

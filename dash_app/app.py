@@ -137,6 +137,7 @@ def display_page(pathname):
 
 def build_default(pathname):
     return html.Div([
+        html.H1(children='Vehicles Dashoard'),
         html.H3('You are on page {}'.format(pathname)),
     ])
 

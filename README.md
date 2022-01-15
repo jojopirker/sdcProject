@@ -6,9 +6,15 @@ This is the Github Page for our SDC Project.
 
 __Pipline Status__
 
+*Builds:*
+
 ![Frontend](https://github.com/ds20m007/sdcProject/actions/workflows/frontend_build.yml/badge.svg)
 ![Dashboard](https://github.com/ds20m007/sdcProject/actions/workflows/dash_app_build.yml/badge.svg)
 ![Backend](https://github.com/ds20m007/sdcProject/actions/workflows/backend_build.yml/badge.svg)
+
+*Deployment:*
+
+![Backend](https://github.com/ds20m007/sdcProject/actions/workflows/azure_deploy.yml/badge.svg)
 
 **Build with:**
 

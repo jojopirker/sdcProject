@@ -45,10 +45,11 @@ Folder | Details
 /frontend | contains all our frontend files 
 /dash_app | contains the dash app, which is integrated into our frontend 
 /data | empty folder for local usage, see /data/README.md 
+/etc | contains additional content for the project (for example pics) 
 /notebooks | contains all the notebooks used for data analysis etc. 
 
 ## Build
-First you'll need to install node.js. Then you can build the frontend. In the **/frontend/sdc-frontend/** folder run:
+First you'll need to install node.js. Then you can build the frontend. Inside the **/frontend/sdc-frontend/** folder run:
 ```
 npm install
 ```
@@ -81,12 +82,17 @@ And point your browser to *localhost*
 ## Known Problems
 
 ### Dash-App Building Process
-Error-Code | Details | Solution
+Error | Details | Solution
 --- | --- | ---
 401 | The credentials are wrong. | -
 403 | The credentials are wrong. | -
 404 | The dataset cannot be found on kaggle. | Run the build again.  
 416 | The contigent for downloading the dataset was already used. | The process needs to be run again the next day.
+
+### Frontend 
+Error | Details | Solution
+--- | --- | ---
+env-cmd | env-cmd is used and does not work. | run commands found under *Build*
 
 ## TODO
 

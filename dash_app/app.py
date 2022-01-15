@@ -107,7 +107,15 @@ accidents_ts.set_index('accident_time', drop=True, inplace=True)
 accidents_monthly = accidents_ts.resample('M').agg({'Accident_Index':'size'})
 accidents_monthly['Moving Average'] = accidents_monthly.rolling(window=5).mean()
 
+#####################
+##
+##
 ######## Layout 
+##
+##
+##
+#####################
+
 app.layout = html.Div(children=[
     #html.H1(children='UK Accidents Dashboard'), class add
     dcc.Location(id='url', refresh=False),

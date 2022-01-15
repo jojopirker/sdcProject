@@ -11,7 +11,7 @@ const APIOverview = () => {
             <h1>API Overview</h1>
             <iframe src={`${process.env.REACT_APP_API}/docs`}
                 style={{ width: "100%", height: "75vh" }}
-                title="This is the frame for the dashoard" 
+                title="This is the frame for the API CALL" 
                 />
         </Container>
     </>)

@@ -16,17 +16,13 @@ const Navigation = ()=> {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
-              <Nav.Link href="/">Home</Nav.Link>
-                <Nav.Link href="dash-1">Dashboard</Nav.Link>
+                <Nav.Link href="dash-1">Dashboard 1</Nav.Link>
                 <Nav.Link href="dash-2">Dashboard 2</Nav.Link>
-                <Nav.Link href="apiOverview">ML API</Nav.Link>
-                <NavDropdown title="Dropdown" id="basic-nav-dropdown">
+                <NavDropdown title="Dashboards" id="basic-nav-dropdown">
                   <NavDropdown.Item href="dash-1">Dashboard</NavDropdown.Item>
-                  <NavDropdown.Item href="#dash-2">Dashboard 2</NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+                  <NavDropdown.Item href="dash-2">Dashboard 2</NavDropdown.Item>
                 </NavDropdown>
+                <Nav.Link href="apiOverview">ML API</Nav.Link>
               </Nav>
             </Navbar.Collapse>
           </Container>

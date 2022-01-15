@@ -40,10 +40,11 @@ const GeneralInformation = () => {
           </Table>
           <h2>Structure</h2>
           <p>
-            Through the Navigation the Dashboard and the severity accident prediction can be reached.
+            Through the Navigation the Dashboard and the severity accident prediction API can be reached.
           </p>
           <h2>Deployment</h2>
           <img src='infrastructure.jpeg' alt='Deployment Diagram'/>
+          <br></br>
         </Container>
     )
 }

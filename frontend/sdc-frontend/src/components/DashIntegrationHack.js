@@ -12,11 +12,12 @@ export const DashIntegration = ({ route }) => {
     return (<>
         <Container>
         {loading &&
-            <>Loading may take time...
-                <Spinner animation="border" />
+            <>
+                <h1 className='text-center'>Loading may take time...</h1>
+                <h2 className='text-center'><Spinner animation="border" /></h2>
             </>}
             <iframe src={`${process.env.REACT_APP_DASH_APP}/${route}`}
-                style={{ width: "100%", height: "75vh" }}
+                style={{ width: "100%", height: "85vh" }}
                 title="This is the frame for the dashoard" 
                 onLoad={() => { setLoading(false) }} /> {/**todo change url**/}
         </Container>

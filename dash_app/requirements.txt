@@ -4,3 +4,4 @@ gunicorn
 pandas
 plotly
 xlrd
+flask_caching

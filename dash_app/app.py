@@ -15,13 +15,13 @@ app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], url_base_pathname=b
 # server for deploy
 server = app.server
 # cache
-'''
+#
 cache = Cache(app.server, config={
     'CACHE_TYPE': 'filesystem',
     'CACHE_DIR': 'cache-directory'
 })
 TIMEOUT = 600 
-'''
+#
 
 #####################
 ##
@@ -266,13 +266,14 @@ def build_page_2(pathname):
     ])
 
 ## Callback Accident Dash
+#
 @app.callback([Output('line-graph-page2', 'figure'),
                 Output('map-graph-occurances', 'figure'),
                 Output('relation-speedlimit-casualties-1', 'figure'),
                 Output('relation-speedlimit-casualties-2', 'figure')],
               [Input(component_id='date-picker-page2', component_property='start_date'),
                Input(component_id='date-picker-page2', component_property='end_date')])
-#@cache.memoize(timeout=TIMEOUT)
+@cache.memoize(timeout=TIMEOUT)
 def build_accident_line_chart(start_date, end_date):
     # ACCIDENTS
     accidents_monthly_cache = accidents_monthly[start_date:end_date]
@@ -329,7 +330,7 @@ def build_accident_line_chart(start_date, end_date):
                 Output('vehicles-capacity', 'figure')],
               [Input(component_id='date-picker-page1', component_property='start_date'),
                Input(component_id='date-picker-page1', component_property='end_date')])
-#@cache.memoize(timeout=TIMEOUT)
+@cache.memoize(timeout=TIMEOUT)
 def build_vehicle_charts(start_date, end_date):
 # VEHICLES
     fig_hist = px.histogram(vehicles[vehicles["Age_of_Driver"]>0], 

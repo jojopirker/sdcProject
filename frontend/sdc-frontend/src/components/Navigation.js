@@ -10,7 +10,7 @@ import Container from 'react-bootstrap/Container'
 const Navigation = ()=> {
 
     return(
-        <Navbar bg="light" expand="lg">
+        <Navbar bg="dark" expand="lg">
           <Container>
             <Navbar.Brand href="/">SDC - UK Accidents</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />

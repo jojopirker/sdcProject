@@ -13,6 +13,14 @@ app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], url_base_pathname=b
 # server for deploy
 server = app.server
 
+#####################
+##
+##
+## Loading Data
+##
+##
+##
+#####################
 
 def get_accidents():
     accidents_full = pd.read_csv('../data/Accidents0514.csv', header=0, skiprows=lambda i: i>0 and random.random() > p)
@@ -94,7 +102,7 @@ def read_and_join_description(df, col_name):
 #####################
 ##
 ##
-## Data preparation
+## Data Preparation
 ##
 ##
 ##
@@ -135,16 +143,92 @@ def display_page(pathname):
     print(pathname)
     return get_path_function(pathname)
 
+#####################
+##
+##
+## Dashboard Layouts 
+##
+##
+##
+#####################
+
+## Vehicles Dash
 def build_default(pathname):
     return html.Div([
         html.H1(children='Vehicles Dashoard'),
         html.H3('You are on page {}'.format(pathname)),
     ])
 
+## Accidents Dash
 def build_page_2(pathname):
+    dev_num_incidents = dbc.Card(
+        [
+            dbc.CardBody([
+                dbc.Row([
+                    dbc.Col(html.H4("Monthly number of accidents with 5 month moving average", className="card-title"),width=10),
+                ]),
+                dcc.Graph(id='line-graph-page2', figure={}),
+            ]),
+        ]
+    )
+    
+    map_incidents = dbc.Card(
+        [
+            dbc.CardBody([
+                dbc.Row([
+                    dbc.Col(html.H4("Incidents in UK", className="card-title"),width=10),
+                ]),
+                # MAP WITH INCIDENTS
+                dcc.Graph(
+                    id='map-graph-occurances', figure={}
+                ),
+            ]),
+        ]
+    )
+
+    speed_casualties = dbc.Card(
+        [
+            dbc.CardBody([
+                dbc.Row([
+                    dbc.Col(html.H4("Relation Speed Limit ~ Number of Casualties", className="card-title"),width=10),
+                ]),
+                dcc.Graph(
+                    id='relation-speedlimit-casualties-1', figure={}
+                ),
+            ]),
+        ]
+    )
+    speed_casualties_weekday = dbc.Card(
+        [
+            dbc.CardBody([
+                dbc.Row([
+                    dbc.Col(html.H4("Heatmap: Number of Casualties based on Speed Limit and Weekday", className="card-title"),width=10),
+                ]),
+                dcc.Graph(
+                    id='relation-speedlimit-casualties-2', figure={}
+                ),
+            ]),
+        ]
+    )
+
     return html.Div([
         html.H1(children='Accidents Dashoard'),
+        html.Hr(),
         ## ACCIDENTS
+        dbc.Row([
+            dbc.Col(dev_num_incidents, width=12),
+        ]),
+        html.Br(),
+        dbc.Row([
+            dbc.Col(map_incidents, width=12),
+        ]),
+        html.Br(),
+        dbc.Row([
+            dbc.Col(speed_casualties_weekday, width=6),
+            dbc.Col(speed_casualties, width=6),
+        ]),
+        html.Br(),
+
         dcc.DatePickerRange(
             id='date-picker-page2',
             min_date_allowed=accidents_monthly.index.min(),
@@ -152,20 +236,8 @@ def build_page_2(pathname):
             start_date=accidents_monthly.index.min(),
             end_date=accidents_monthly.index.max()
         ),
-        dcc.Graph(
-            id='line-graph-page2'
-        ),
-        # MAP WITH INCIDENTS PER DISTRICT
-        dcc.Graph(
-            id='map-graph-occurances', figure={}
-        ),
-        # Relation of Speed Limit and Number of Casualaties
-        dcc.Graph(
-            id='relation-speedlimit-casualties-1', figure={}
-        ),
-        dcc.Graph(
-            id='relation-speedlimit-casualties-2', figure={}
-        ),
+        
+        
         ## VEHICLES
         # Vehicles Driver Age/sex Histogram
         dcc.Graph(
@@ -178,6 +250,7 @@ def build_page_2(pathname):
         html.H3('You are on page {}'.format(pathname))
     ])
 
+## Callback Accident Dash
 @app.callback([Output('line-graph-page2', 'figure'),
                 Output('map-graph-occurances', 'figure'),
                 Output('relation-speedlimit-casualties-1', 'figure'),
@@ -197,7 +270,6 @@ def build_accident_line_chart(start_date, end_date):
         y=['Amount of Accidents','Moving Average']
     )
     fig.update_layout(
-        title="Monthly number of accidents with 5 month moving average",
         xaxis_title="Time",
         yaxis_title="Number of Accidents",
         legend_title="Legend"
@@ -206,6 +278,10 @@ def build_accident_line_chart(start_date, end_date):
     accidents_cache = accidents_ts[start_date:end_date]
     fig_map = px.scatter_geo(
         data_frame=accidents_cache,
+        scope='europe',
+        # Add coordinates limits on a map
+        lataxis = dict(range=[50.10319,60.15456]),
+        lonaxis = dict(range=[-7.64133,1.75159]),
         lat="Latitude",
         lon="Longitude"
     )
@@ -235,6 +311,8 @@ def build_accident_line_chart(start_date, end_date):
                  symbol="Sex_of_Driver")
 
     return fig, fig_map, fig_rel_speed_casualties, fig_acc_small, fig_hist, fig_capacity
+
+## Callback Vehicles Dash
 
 switcher = {
     base_path+"page-2": build_page_2

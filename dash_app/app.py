@@ -6,6 +6,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
+from flask_caching import Cache
 import random
 # percentage of data points
 p = 0.01
@@ -13,6 +14,7 @@ base_path = "/dash/"
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], url_base_pathname=base_path)
 # server for deploy
 server = app.server
+TIMEOUT = 600
 
 #####################
 ##
@@ -263,6 +265,7 @@ def build_page_2(pathname):
                 Output('relation-speedlimit-casualties-2', 'figure')],
               [Input(component_id='date-picker-page2', component_property='start_date'),
                Input(component_id='date-picker-page2', component_property='end_date')])
+@cache.memoize(timeout=TIMEOUT)
 def build_accident_line_chart(start_date, end_date):
     # ACCIDENTS
     accidents_monthly_cache = accidents_monthly[start_date:end_date]
@@ -319,6 +322,7 @@ def build_accident_line_chart(start_date, end_date):
                 Output('vehicles-capacity', 'figure')],
               [Input(component_id='date-picker-page1', component_property='start_date'),
                Input(component_id='date-picker-page1', component_property='end_date')])
+@cache.memoize(timeout=TIMEOUT)
 def build_vehicle_charts(start_date, end_date):
 # VEHICLES
     fig_hist = px.histogram(vehicles[vehicles["Age_of_Driver"]>0], 

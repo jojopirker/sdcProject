@@ -1,2 +1,5 @@
 FastAPI
 uvicorn[standard]
+joblib
+pydantic
+pandas

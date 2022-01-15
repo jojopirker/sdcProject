@@ -38,13 +38,14 @@ const GeneralInformation = () => {
               </tr>
             </tbody>
           </Table>
-          <h2>Structure</h2>
-          <p>
-            Through the Navigation the Dashboard and the severity accident prediction API can be reached.
-          </p>
           <h2>Deployment</h2>
           <img src='infrastructure.jpeg' alt='Deployment Diagram'/>
-          <br></br>
+          <h2>Structure</h2>
+          <p>
+            Through the Navigation the Dashboards and the severity accident prediction API can be reached.
+            The Dashboards are divided into an Accidents Dashboard and an Vehicle Dashboard. So there are two different viewing points on the dataset. 
+          </p>
+
         </Container>
     )
 }

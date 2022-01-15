@@ -157,6 +157,22 @@ def display_page(pathname):
 def build_default(pathname):
     return html.Div([
         html.H1(children='Vehicles Dashoard'),
+        dcc.DatePickerRange(
+            id='date-picker-page1',
+            min_date_allowed=accidents_monthly.index.min(),
+            max_date_allowed=accidents_monthly.index.max(),
+            start_date=accidents_monthly.index.min(),
+            end_date=accidents_monthly.index.max()
+        ),
+        ## VEHICLES
+        # Vehicles Driver Age/sex Histogram
+        dcc.Graph(
+            id='vehicles-hist', figure={}
+        ),
+        # Engine Capacity
+        dcc.Graph(
+            id='vehicles-capacity', figure={}
+        ),
         html.H3('You are on page {}'.format(pathname)),
     ])
 
@@ -238,27 +254,13 @@ def build_page_2(pathname):
             start_date=accidents_monthly.index.min(),
             end_date=accidents_monthly.index.max()
         ),
-        
-        
-        ## VEHICLES
-        # Vehicles Driver Age/sex Histogram
-        dcc.Graph(
-            id='vehicles-hist', figure={}
-        ),
-        # Engine Capacity
-        dcc.Graph(
-            id='vehicles-capacity', figure={}
-        ),
-        html.H3('You are on page {}'.format(pathname))
     ])
 
 ## Callback Accident Dash
 @app.callback([Output('line-graph-page2', 'figure'),
                 Output('map-graph-occurances', 'figure'),
                 Output('relation-speedlimit-casualties-1', 'figure'),
-                Output('relation-speedlimit-casualties-2', 'figure'),
-                Output('vehicles-hist', 'figure'),
-                Output('vehicles-capacity', 'figure')],
+                Output('relation-speedlimit-casualties-2', 'figure')],
               [Input(component_id='date-picker-page2', component_property='start_date'),
                Input(component_id='date-picker-page2', component_property='end_date')])
 def build_accident_line_chart(start_date, end_date):
@@ -310,7 +312,15 @@ def build_accident_line_chart(start_date, end_date):
 
     fig_acc_small = px.imshow(accidents_small)
 
-    # VEHICLES
+    return fig, fig_map, fig_rel_speed_casualties, fig_acc_small
+
+## Callback Vehicles Dash
+@app.callback([Output('vehicles-hist', 'figure'),
+                Output('vehicles-capacity', 'figure')],
+              [Input(component_id='date-picker-page1', component_property='start_date'),
+               Input(component_id='date-picker-page1', component_property='end_date')])
+def build_vehicle_charts(start_date, end_date):
+# VEHICLES
     fig_hist = px.histogram(vehicles[vehicles["Age_of_Driver"]>0], 
                    x="Age_of_Driver", 
                   color="Sex_of_Driver",
@@ -322,10 +332,7 @@ def build_accident_line_chart(start_date, end_date):
                  color="Vehicle_Type", 
                  size='Age_of_Vehicle',
                  symbol="Sex_of_Driver")
-
-    return fig, fig_map, fig_rel_speed_casualties, fig_acc_small, fig_hist, fig_capacity
-
-## Callback Vehicles Dash
+    return fig_hist, fig_capacity
 
 switcher = {
     base_path+"page-2": build_page_2

@@ -6,7 +6,7 @@ COPY requirements.txt requirements.txt
 
 RUN pip install -r requirements.txt
 
-COPY /model /model
+COPY ./model ./model
 
 COPY app.py app.py
 

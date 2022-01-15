@@ -3,3 +3,4 @@ uvicorn[standard]
 joblib
 pydantic
 pandas
+sklearn

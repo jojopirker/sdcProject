@@ -26,7 +26,7 @@ class Item(BaseModel):
 @app.on_event("startup")
 async def startup_event():
     filename = './model/finalized_model.pkl'
-    #knn_model = joblib.load(filename)
+    knn_model = joblib.load(filename)
 
 @app.get("/")
 def read_root():

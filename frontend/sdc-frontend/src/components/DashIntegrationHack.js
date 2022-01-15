@@ -10,7 +10,7 @@ export const DashIntegration = ({ route }) => {
     const [loading, setLoading] = useState(true);
 
     return (<>
-        <Container>
+        <Container style={{overflow:"visible"}}> 
         {loading &&
             <>
                 <h1 className='text-center'>Loading may take time...</h1>

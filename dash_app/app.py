@@ -14,6 +14,11 @@ base_path = "/dash/"
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], url_base_pathname=base_path)
 # server for deploy
 server = app.server
+# cache
+cache = Cache(app.server, config={
+    'CACHE_TYPE': 'filesystem',
+    'CACHE_DIR': 'cache-directory'
+})
 TIMEOUT = 600
 
 #####################

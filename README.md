@@ -33,6 +33,8 @@ __Pipline Status__
 
 ## Deployment
 
+The current deployed version can be visited under: http://sdc-project.azurewebsites.net 
+
 ![Deployment](https://github.com/ds20m007/sdcProject/blob/main/etc/infrastructure.jpeg)
 
 ## Project Structure
@@ -102,6 +104,7 @@ env-cmd | env-cmd is used and does not work. | run commands found under *Build*
 - [x] Update Frontend
 - [x] Create Flask Backend
 - [x] Create Github Actions
+- [x] Change Layout Dash App
 - [ ] Update Dash App
 - [ ] Add Filters to Dash App
 - [x] Setup Azure AppServices

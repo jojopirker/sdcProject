@@ -11,6 +11,9 @@ const GeneralInformation = () => {
     return(
         <Container>
           <h1>General Project Information</h1>
+          The project insights can be found in the github repository under the following Link: 
+          <a href="https://github.com/ds20m007/sdcProject">https://github.com/ds20m007/sdcProject</a>
+          
           <h2>Data</h2>
           <p>
             The Dataset is from Kaggle (Link: <a href='https://www.kaggle.com/benoit72/uk-accidents-10-years-history-with-many-variables'>UK-Accidents</a>). 

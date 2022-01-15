@@ -3,6 +3,7 @@ import dash
 from dash import dcc
 from dash import html
 import plotly.express as px
+import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 import random
@@ -202,7 +203,7 @@ def build_page_2(pathname):
         [
             dbc.CardBody([
                 dbc.Row([
-                    dbc.Col(html.H4("Heatmap: Number of Casualties based on Speed Limit and Weekday", className="card-title"),width=10),
+                    dbc.Col(html.H4("Influence of Speed Limit / Weekday on Casualties", className="card-title"),width=10),
                 ]),
                 dcc.Graph(
                     id='relation-speedlimit-casualties-2', figure={}
@@ -216,16 +217,17 @@ def build_page_2(pathname):
         html.Hr(),
         ## ACCIDENTS
         dbc.Row([
-            dbc.Col(dev_num_incidents, width=12),
+            dbc.Col(dev_num_incidents, width=11),
         ]),
         html.Br(),
         dbc.Row([
-            dbc.Col(map_incidents, width=12),
+            dbc.Col(map_incidents, width=5),
+            dbc.Col(html.H4("CHART TO BE ADDED"), width=5),
         ]),
         html.Br(),
         dbc.Row([
-            dbc.Col(speed_casualties_weekday, width=6),
-            dbc.Col(speed_casualties, width=6),
+            dbc.Col(speed_casualties_weekday, width=5),
+            dbc.Col(speed_casualties, width=5),
         ]),
         html.Br(),
 
@@ -276,15 +278,26 @@ def build_accident_line_chart(start_date, end_date):
     )
 
     accidents_cache = accidents_ts[start_date:end_date]
-    fig_map = px.scatter_geo(
-        data_frame=accidents_cache,
-        scope='europe',
-        # Add coordinates limits on a map
-        lataxis = dict(range=[50.10319,60.15456]),
-        lonaxis = dict(range=[-7.64133,1.75159]),
-        lat="Latitude",
-        lon="Longitude"
+
+    fig_map = go.Figure(go.Scattergeo(
+        lat=accidents_cache["Latitude"],
+        lon=accidents_cache["Longitude"],
+        text=accidents_cache["1st_Road_Number"],
+        mode="markers",
+        marker_color=accidents_cache["Speed_limit"],
+    ))
+    fig_map.update_geos(
+        lataxis_range=[50.10319,60.15456],
+        lonaxis_range=[-7.64133,1.75159],
+        visible=False, 
+        resolution=110, 
+        scope="europe",
+        showcountries=True, 
+        countrycolor="Black",
+        showsubunits=True, 
+        subunitcolor="Blue"
     )
+
     fig_rel_speed_casualties = px.scatter(accidents_cache.nlargest(20, 'Number_of_Casualties'), 
                  x="Number_of_Casualties", 
                  y="Speed_limit",

@@ -26,10 +26,7 @@ class Item(BaseModel):
 @app.on_event("startup")
 async def startup_event():
     filename = './model/finalized_model.pkl'
-    knn_model = joblib.load(filename)
-
-    input_format_df = pd.read_csv('./input_format/input_format.csv')
-    input_format_df = input_format_df[0:0]
+    #knn_model = joblib.load(filename)
 
 @app.get("/")
 def read_root():
@@ -37,8 +34,8 @@ def read_root():
 
 @app.post("/items")
 def ask_model(item: Item):
-    result = knn_model.predict() 
-    return {"accident_severty":result}
+    #result = knn_model.predict() 
+    return {"accident_severty":"result"}
 
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: Optional[str] = None):

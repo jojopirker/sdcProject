@@ -4,6 +4,9 @@ from typing import Optional
 #
 app = FastAPI()
 
+@app.on_event("startup")
+async def load_models():
+    return
 
 @app.get("/")
 def read_root():

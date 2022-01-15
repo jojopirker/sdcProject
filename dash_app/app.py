@@ -222,12 +222,12 @@ def build_page_2(pathname):
         html.Br(),
         dbc.Row([
             dbc.Col(map_incidents, width=5),
-            dbc.Col(html.H4("CHART TO BE ADDED"), width=5),
+            dbc.Col(html.H4("CHART TO BE ADDED"), width=6),
         ]),
         html.Br(),
         dbc.Row([
             dbc.Col(speed_casualties_weekday, width=5),
-            dbc.Col(speed_casualties, width=5),
+            dbc.Col(speed_casualties, width=6),
         ]),
         html.Br(),
 

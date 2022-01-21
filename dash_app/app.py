@@ -265,7 +265,7 @@ def build_page_2(pathname):
                     min=1,
                     max=3,
                     step=1,
-                    value=[1, 3],
+                    value=[2, 3],
                     marks={
                         1: 'Fatal',
                         2: 'Serious',
@@ -279,19 +279,20 @@ def build_page_2(pathname):
                 dcc.Dropdown(
                     id='light-conditions-multi',
                     options=[
-                        {'label': 'Daylight', 'value': '1'},
-                        {'label': 'Darkness - lights lit', 'value': '4'},
-                        {'label': 'Darkness - lights unlit', 'value': '5'},
-                        {'label': 'Darkness - no lighting', 'value': '6'},
-                        {'label': 'Darkness - lighting unknown', 'value': '7'},
-                        {'label': 'Data missing', 'value': '-1'}
+                        {'label': 'Daylight', 'value': 'Daylight'},
+                        {'label': 'Darkness - lights lit', 'value': 'Darkness - lights lit'},
+                        {'label': 'Darkness - lights unlit', 'value': 'Darkness - lights unlit'},
+                        {'label': 'Darkness - no lighting', 'value': 'Darkness - no lighting'},
+                        {'label': 'Darkness - lighting unknown', 'value': 'Darkness - lighting unknown'},
+                        {'label': 'Data missing', 'value': 'Data missing or out of range'}
                     ],
-                    value=['1', '4', '5', '6', '7', '-1'],
+                    value=['Daylight', 'Darkness - lights lit'],
                     multi=True
                 )
             ], width=4),
         ]),
         html.Br(),
+        html.Div(id="test"),
         ## Charts
         dbc.Row([
             dbc.Col(dev_num_incidents, width=11),
@@ -314,10 +315,28 @@ def build_page_2(pathname):
                 Output('relation-speedlimit-casualties-1', 'figure'),
                 Output('relation-speedlimit-casualties-2', 'figure')],
               [Input(component_id='date-picker-page2', component_property='start_date'),
-               Input(component_id='date-picker-page2', component_property='end_date')])
+               Input(component_id='date-picker-page2', component_property='end_date'),
+               Input(component_id='acc-severity-slider', component_property='value'),
+               Input(component_id='light-conditions-multi', component_property='value')])
 @cache.memoize(timeout=TIMEOUT)
-def build_accident_line_chart(start_date, end_date):
-    accidents_monthly_cache = accidents_monthly[start_date:end_date]
+def build_accident_line_chart(start_date, end_date, acc_sev, light_con):
+    # Filter Date
+    accidents_cache=accidents_ts[start_date:end_date]
+    # Filter Accident Severity
+    acc_sev_dict = {
+        1: 'Fatal', 
+        2: 'Serious',  
+        3: 'Slight'
+    }
+    acc_sev_trans=[]
+    for sev in range(int(acc_sev[0]), int(acc_sev[1])):
+        acc_sev_trans.append(acc_sev_dict[sev])
+    accidents_cache = accidents_cache[accidents_cache['Accident_Severity'].isin(acc_sev_trans)]
+    # Filter Light Conditions
+    accidents_cache = accidents_cache[accidents_cache['Light_Conditions'].isin(light_con)]
+    # Moving average
+    accidents_monthly_cache = accidents_cache.resample('M').agg({'Accident_Index':'size'})
+    accidents_monthly_cache['Moving Average'] = accidents_monthly_cache.rolling(window=5).mean()
     accidents_monthly_cache.rename(columns={'Accident_Index':'Amount of Accidents'}, inplace=True)
 
     fig = px.line(
@@ -330,8 +349,6 @@ def build_accident_line_chart(start_date, end_date):
         yaxis_title="Number of Accidents",
         legend_title="Legend"
     )
-
-    accidents_cache = accidents_ts[start_date:end_date]
 
     fig_map = go.Figure(go.Scattergeo(
         lat=accidents_cache["Latitude"],
@@ -353,10 +370,10 @@ def build_accident_line_chart(start_date, end_date):
     )
 
     fig_rel_speed_casualties = px.scatter(accidents_cache.nlargest(50, 'Number_of_Casualties'), 
-                 x="Number_of_Casualties", 
-                 y="Speed_limit",
-                color = "Number_of_Vehicles",
-                text="1st_Road_Number")
+        x="Number_of_Casualties", 
+        y="Speed_limit",
+        color = "Number_of_Vehicles",
+        text="1st_Road_Number")
 
     accidents_small = accidents_cache[['Day_of_Week','Number_of_Casualties','Speed_limit']].groupby(['Speed_limit','Day_of_Week'],as_index=False).sum()
     accidents_small['Day_of_Week'] = pd.Categorical(accidents_small['Day_of_Week'] , ['Monday', 'Tuesday', 'Wednesday','Thursday','Friday','Saturday','Sunday'])

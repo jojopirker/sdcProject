@@ -21,9 +21,9 @@ cache = Cache(app.server, config={
     'CACHE_DIR': 'cache-directory'
 })
 TIMEOUT = 600 
-#
 
 #####################
+##
 ##
 ##
 ## Loading Data
@@ -112,6 +112,7 @@ def read_and_join_description(df, col_name):
 #####################
 ##
 ##
+##
 ## Data Preparation
 ##
 ##
@@ -126,6 +127,7 @@ accidents_monthly = accidents_ts.resample('M').agg({'Accident_Index':'size'})
 accidents_monthly['Moving Average'] = accidents_monthly.rolling(window=5).mean()
 
 #####################
+##
 ##
 ##
 ######## Layout 
@@ -154,6 +156,7 @@ def display_page(pathname):
     return get_path_function(pathname)
 
 #####################
+##
 ##
 ##
 ## Dashboard Layouts 
@@ -266,7 +269,6 @@ def build_page_2(pathname):
     ])
 
 ## Callback Accident Dash
-#
 @app.callback([Output('line-graph-page2', 'figure'),
                 Output('map-graph-occurances', 'figure'),
                 Output('relation-speedlimit-casualties-1', 'figure'),
@@ -275,7 +277,6 @@ def build_page_2(pathname):
                Input(component_id='date-picker-page2', component_property='end_date')])
 @cache.memoize(timeout=TIMEOUT)
 def build_accident_line_chart(start_date, end_date):
-    # ACCIDENTS
     accidents_monthly_cache = accidents_monthly[start_date:end_date]
     accidents_monthly_cache.rename(columns={'Accident_Index':'Amount of Accidents'}, inplace=True)
 

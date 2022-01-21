@@ -219,7 +219,7 @@ def build_page_2(pathname):
         [
             dbc.CardBody([
                 dbc.Row([
-                    dbc.Col(html.H4("Relation Speed Limit ~ Number of Casualties", className="card-title"),width=10),
+                    dbc.Col(html.H4("Top 50 Incidents: Relation Speed Limit ~ Number of Casualties", className="card-title"),width=10),
                 ]),
                 dcc.Graph(
                     id='relation-speedlimit-casualties-1', figure={}
@@ -227,6 +227,7 @@ def build_page_2(pathname):
             ]),
         ]
     )
+    
     speed_casualties_weekday = dbc.Card(
         [
             dbc.CardBody([
@@ -243,7 +244,55 @@ def build_page_2(pathname):
     return html.Div([
         html.H1(children='Accidents Dashoard'),
         html.Hr(),
-        ## ACCIDENTS
+        ## Filters
+        dbc.Row([
+            # Date Range Filter
+            dbc.Col([
+                html.H3(children='Date Range'),
+                dcc.DatePickerRange(
+                    id='date-picker-page2',
+                    min_date_allowed=accidents_monthly.index.min(),
+                    max_date_allowed=accidents_monthly.index.max(),
+                    start_date=accidents_monthly.index.min(),
+                    end_date=accidents_monthly.index.max()
+                )
+            ], width=3),
+            # Accident Severity Filter
+            dbc.Col([
+                html.H3(children='Accident Severity'),
+                dcc.RangeSlider(
+                    id='acc-severity-slider',
+                    min=1,
+                    max=3,
+                    step=1,
+                    value=[1, 3],
+                    marks={
+                        1: 'Fatal',
+                        2: 'Serious',
+                        3: 'Slight'
+                    },
+                )
+            ], width=4),
+            # Light Conditions
+            dbc.Col([
+                html.H3(children='Light Conditions'),
+                dcc.Dropdown(
+                    id='light-conditions-multi',
+                    options=[
+                        {'label': 'Daylight', 'value': '1'},
+                        {'label': 'Darkness - lights lit', 'value': '4'},
+                        {'label': 'Darkness - lights unlit', 'value': '5'},
+                        {'label': 'Darkness - no lighting', 'value': '6'},
+                        {'label': 'Darkness - lighting unknown', 'value': '7'},
+                        {'label': 'Data missing', 'value': '-1'}
+                    ],
+                    value=['1', '4', '5', '6', '7', '-1'],
+                    multi=True
+                )
+            ], width=4),
+        ]),
+        html.Br(),
+        ## Charts
         dbc.Row([
             dbc.Col(dev_num_incidents, width=11),
         ]),
@@ -257,15 +306,6 @@ def build_page_2(pathname):
             dbc.Col(speed_casualties_weekday, width=5),
             dbc.Col(speed_casualties, width=6),
         ]),
-        html.Br(),
-
-        dcc.DatePickerRange(
-            id='date-picker-page2',
-            min_date_allowed=accidents_monthly.index.min(),
-            max_date_allowed=accidents_monthly.index.max(),
-            start_date=accidents_monthly.index.min(),
-            end_date=accidents_monthly.index.max()
-        ),
     ])
 
 ## Callback Accident Dash
@@ -312,7 +352,7 @@ def build_accident_line_chart(start_date, end_date):
         subunitcolor="Blue"
     )
 
-    fig_rel_speed_casualties = px.scatter(accidents_cache.nlargest(20, 'Number_of_Casualties'), 
+    fig_rel_speed_casualties = px.scatter(accidents_cache.nlargest(50, 'Number_of_Casualties'), 
                  x="Number_of_Casualties", 
                  y="Speed_limit",
                 color = "Number_of_Vehicles",

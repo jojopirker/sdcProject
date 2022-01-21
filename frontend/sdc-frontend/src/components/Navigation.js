@@ -16,8 +16,6 @@ const Navigation = ()=> {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
-                <Nav.Link href="dash-2">Accidents Dashoard</Nav.Link>
-                <Nav.Link href="dash-1">Vehicles Dashoard</Nav.Link>
                 <NavDropdown title="Dashboards" id="basic-nav-dropdown">
                   <NavDropdown.Item href="dash-2">Accidents Dashoard</NavDropdown.Item>
                   <NavDropdown.Item href="dash-1">Vehicles Dashboard</NavDropdown.Item>

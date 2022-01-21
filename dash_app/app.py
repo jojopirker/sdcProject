@@ -215,6 +215,18 @@ def build_page_2(pathname):
         ]
     )
 
+    road_weather = dbc.Card(
+        [
+            dbc.CardBody([
+                dbc.Row([
+                    dbc.Col(html.H4("Weather and Road Conditions", className="card-title"),width=10),
+                ]),
+                dcc.Graph(
+                    id='weather-road-conditions', figure={}
+                ),
+            ]),
+        ]
+    )
     speed_casualties = dbc.Card(
         [
             dbc.CardBody([
@@ -300,7 +312,7 @@ def build_page_2(pathname):
         html.Br(),
         dbc.Row([
             dbc.Col(map_incidents, width=5),
-            dbc.Col(html.H4("CHART TO BE ADDED"), width=6),
+            dbc.Col(road_weather, width=6),
         ]),
         html.Br(),
         dbc.Row([
@@ -312,6 +324,7 @@ def build_page_2(pathname):
 ## Callback Accident Dash
 @app.callback([Output('line-graph-page2', 'figure'),
                 Output('map-graph-occurances', 'figure'),
+                Output('weather-road-conditions', 'figure'),
                 Output('relation-speedlimit-casualties-1', 'figure'),
                 Output('relation-speedlimit-casualties-2', 'figure')],
               [Input(component_id='date-picker-page2', component_property='start_date'),
@@ -369,6 +382,13 @@ def build_accident_line_chart(start_date, end_date, acc_sev, light_con):
         subunitcolor="Blue"
     )
 
+    accidents_agg = accidents_cache.groupby(['Weather_Conditions','Road_Surface_Conditions'], as_index=False).size()
+    fig_weather_road = px.bar(accidents_agg, 
+             x='Weather_Conditions', 
+             y='size', 
+             color='Road_Surface_Conditions', 
+             barmode='group')
+
     fig_rel_speed_casualties = px.scatter(accidents_cache.nlargest(50, 'Number_of_Casualties'), 
         x="Number_of_Casualties", 
         y="Speed_limit",
@@ -381,7 +401,7 @@ def build_accident_line_chart(start_date, end_date, acc_sev, light_con):
 
     fig_acc_small = px.imshow(accidents_small)
 
-    return fig, fig_map, fig_rel_speed_casualties, fig_acc_small
+    return fig, fig_map, fig_weather_road, fig_rel_speed_casualties, fig_acc_small
 
 ## Callback Vehicles Dash
 @app.callback([Output('vehicles-hist', 'figure'),

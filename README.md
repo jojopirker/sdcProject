@@ -112,9 +112,11 @@ env-cmd | env-cmd is used and does not work. | run commands found under *Build*
 - [x] Create Github Actions
 - [x] Change Layout Dash App
 - [ ] Update Dash App
-- [ ] Add Filters to Dash App
+- [ ] Add Filters to Dash App 1
+- [x] Add Filters to Dash App 2
 - [x] Setup Azure AppServices
 - [ ] Update backend with model
+- [ ] Add Data Table Overview to GeneralInformation Page
 
 
 

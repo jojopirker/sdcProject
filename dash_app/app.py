@@ -463,8 +463,11 @@ def build_accident_charts(start_date, end_date, acc_sev, light_con):
         3: 'Slight'
     }
     acc_sev_trans=[]
-    for sev in range(int(acc_sev[0]), int(acc_sev[1])):
-        acc_sev_trans.append(acc_sev_dict[sev])
+    if acc_sev[0] == acc_sev[1]:
+        acc_sev_trans.append(acc_sev_dict[0])
+    else:
+        for sev in range(int(acc_sev[0]), int(acc_sev[1])):
+            acc_sev_trans.append(acc_sev_dict[sev])
     accidents_cache = accidents_cache[accidents_cache['Accident_Severity'].isin(acc_sev_trans)]
     # Filter Light Conditions
     accidents_cache = accidents_cache[accidents_cache['Light_Conditions'].isin(light_con)]

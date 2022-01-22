@@ -500,8 +500,13 @@ def build_accident_charts(start_date, end_date, acc_sev, light_con):
         showcountries=True, 
         countrycolor="Black",
         showsubunits=True, 
-        subunitcolor="Blue"
-    )
+        subunitcolor="Blue",
+        showcoastlines=True, coastlinecolor="RebeccaPurple",
+        showland=True, landcolor="LightGreen",
+        showocean=True, oceancolor="LightBlue",
+        showlakes=True, lakecolor="Blue",
+        showrivers=True, rivercolor="Blue")
+    fig_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
     accidents_agg = accidents_cache.groupby(['Weather_Conditions','Road_Surface_Conditions'], as_index=False).size()
     fig_weather_road = px.bar(accidents_agg, 
@@ -535,12 +540,28 @@ def build_accident_charts(start_date, end_date, acc_sev, light_con):
 @cache.memoize(timeout=TIMEOUT)
 def build_vehicle_charts(veh_type, eng_cap, veh_man):
     # Filters
+    # Generate rightfull Filtering Options
+    veh_man_dict = {
+        'Reversing': ['Reversing'], 
+        'Parked': ['Parked'],  
+        'Waiting to go / turn': ['Waiting to go - held up', 'Waiting to turn left', 'Waiting to turn right'],  
+        'Slowing or stopping': ['Slowing or stopping'],  
+        'Turning': ['Turning right', 'Turning left', 'U-turn'],  
+        'Changing lane': ['Changing lane to left', 'Changing lane to right'],  
+        'Overtaking': ['Overtaking moving vehicle - offside', 'Overtaking static vehicle - offside', 'Overtaking - nearside'],  
+        'Going ahead': ['Going ahead left-hand bend', 'Going ahead right-hand bend', 'Going ahead other'],  
+        'Data missing': ['Data missing or out of range'],  
+    }
+    veh_man_trans=[]
+    for man in veh_man:
+        veh_man_trans = veh_man_trans + veh_man_dict[man]
+
     vehicles_cache = vehicles.copy()
     vehicles_cache = vehicles_cache[vehicles_cache['Vehicle_Type'].isin(veh_type)]
-    vehicles_cache = vehicles_cache[vehicles_cache['Vehicle_Manoeuvre'].isin(veh_man)]
+    vehicles_cache = vehicles_cache[vehicles_cache['Vehicle_Manoeuvre'].isin(veh_man_trans)]
     vehicles_cache = vehicles_cache[vehicles_cache['Engine_Capacity_(CC)'].between(int(eng_cap[0]), int(eng_cap[1]))]
     # Join
-    accidents_vehicles = accidents_ts.join(vehicles_cache.set_index('Accident_Index'))
+    accidents_vehicles = accidents.merge(vehicles_cache, on='Accident_Index')
 
     # Charts
     fig_hist = px.histogram(vehicles_cache[vehicles_cache["Age_of_Driver"]>0], 
@@ -557,7 +578,7 @@ def build_vehicle_charts(veh_type, eng_cap, veh_man):
                 symbol="Sex_of_Driver")
 
     # Vehicles Manoeuvre / Number of Casualties
-    vehicles_agg = accidents_vehicles.groupby(['Vehicle_Manoeuvre', 'Sex_of_Driver'], as_index=False).sum()
+    vehicles_agg = accidents_vehicles.groupby(['Vehicle_Manoeuvre', 'Sex_of_Driver'], as_index=False).mean()
     fig_loc_cas = px.bar(vehicles_agg, 
              x='Vehicle_Manoeuvre', 
              y='Number_of_Casualties', 
@@ -565,11 +586,11 @@ def build_vehicle_charts(veh_type, eng_cap, veh_man):
              barmode='group')
 
     # Vehicle Age / Weather
-    vehicles_agg = accidents_vehicles.groupby(['Weather_Conditions'], as_index=False).mean()
-    fig_age_weather = px.bar(accidents_vehicles, 
+    vehicles_agg = accidents_vehicles.groupby(['Weather_Conditions', 'Road_Type'])['Age_of_Vehicle'].mean()
+    fig_age_weather = px.bar(vehicles_agg, 
              x='Weather_Conditions', 
              y='Age_of_Vehicle', 
-             color='Weather_Conditions', 
+             color='Road_Type', 
              barmode='group')
 
     return fig_hist, fig_capacity, fig_loc_cas, fig_age_weather

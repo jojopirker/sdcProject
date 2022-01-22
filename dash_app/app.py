@@ -487,15 +487,15 @@ def build_accident_charts(start_date, end_date, acc_sev, light_con):
     fig_map = go.Figure(go.Scattergeo(
         lat=accidents_cache["Latitude"],
         lon=accidents_cache["Longitude"],
-        text=accidents_cache["Accident_Severity"],
+        text="Accident Severity: " + accidents_cache["Accident_Severity"],
         showlegend = False,
         mode="markers",
         marker = dict(
-            #size = (cit['Population (2011)[3]'] / 2000).tolist(),
-            color = accidents_cache["Speed_limit"],
+            size = accidents_cache["Speed_limit"],
+            color = accidents_cache["Number_of_Casualties"],
             colorscale = 'Jet',
-            #line = dict(width=0.5, color='rgb(40,40,40)'),
-            #sizemode = 'area',
+            line = dict(width=0.5, color='rgb(40,40,40)'),
+            sizemode = 'area',
             showscale = True
         )
     ))
@@ -532,7 +532,7 @@ def build_accident_charts(start_date, end_date, acc_sev, light_con):
         x="Number_of_Casualties", 
         y="Speed_limit",
         color = "Number_of_Vehicles",
-        text="1st_Road_Number")
+        text="Accident_Severity")
     fig_rel_speed_casualties.update_layout(
         xaxis_title="Number of Casualties",
         yaxis_title="Speedlimit",

@@ -4,3 +4,4 @@ joblib
 pydantic
 pandas
 sklearn
+numpy

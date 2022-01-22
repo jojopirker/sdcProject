@@ -585,6 +585,10 @@ def build_vehicle_charts(veh_type, eng_cap, veh_man):
                 x="Age_of_Driver", 
                 color="Sex_of_Driver",
                 nbins=12)
+    fig_hist.update_layout(
+        xaxis_title="Number of Drivers",
+        yaxis_title="Age of Drivers",
+    )
 
     fig_capacity = px.scatter(vehicles_cache[vehicles_cache['Age_of_Vehicle']>=0], # NEEDS TO BE ADAPTED
                 x="Age_of_Driver", 

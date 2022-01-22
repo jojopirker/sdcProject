@@ -464,7 +464,7 @@ def build_accident_charts(start_date, end_date, acc_sev, light_con):
     }
     acc_sev_trans=[]
     if acc_sev[0] == acc_sev[1]:
-        acc_sev_trans.append(acc_sev[0])
+        acc_sev_trans.append(acc_sev_dict[acc_sev[0]])
     else:
         for sev in range(int(acc_sev[0]), int(acc_sev[1])):
             acc_sev_trans.append(acc_sev_dict[sev])

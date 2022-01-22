@@ -206,7 +206,7 @@ def build_default(pathname):
         [
             dbc.CardBody([
                 dbc.Row([
-                    dbc.Col(html.H4("Histogram Driver's Age based on Gender", className="card-title"),width=10),
+                    dbc.Col(html.H4("Number of Casualties based on Vehicles Manoeuvre", className="card-title"),width=10),
                 ]),
                 dcc.Graph(
                     id='vehicles-loc-casualties', figure={}
@@ -219,7 +219,7 @@ def build_default(pathname):
         [
             dbc.CardBody([
                 dbc.Row([
-                    dbc.Col(html.H4("Age of Driver ~ Engine Capacity", className="card-title"),width=10),
+                    dbc.Col(html.H4("Age of Vehicles ~ Weather Conditions", className="card-title"),width=10),
                 ]),
                 dcc.Graph(
                     id='vehicles-age-weather', figure={}
@@ -522,12 +522,21 @@ def build_accident_charts(start_date, end_date, acc_sev, light_con):
              y='size', 
              color='Road_Surface_Conditions', 
              barmode='group')
+    fig_weather_road.update_layout(
+        xaxis_title="Weather Conditions",
+        yaxis_title="Number of Accidents",
+        legend_title="Legend"
+    )
 
     fig_rel_speed_casualties = px.scatter(accidents_cache.nlargest(50, 'Number_of_Casualties'), 
         x="Number_of_Casualties", 
         y="Speed_limit",
         color = "Number_of_Vehicles",
         text="1st_Road_Number")
+    fig_rel_speed_casualties.update_layout(
+        xaxis_title="Number of Casualties",
+        yaxis_title="Speedlimit",
+    )
 
     accidents_small = accidents_cache[['Day_of_Week','Number_of_Casualties','Speed_limit']].groupby(['Speed_limit','Day_of_Week'],as_index=False).sum()
     accidents_small['Day_of_Week'] = pd.Categorical(accidents_small['Day_of_Week'] , ['Monday', 'Tuesday', 'Wednesday','Thursday','Friday','Saturday','Sunday'])
@@ -584,14 +593,19 @@ def build_vehicle_charts(veh_type, eng_cap, veh_man):
                 #size='Age_of_Vehicle',
                 color="Sex_of_Driver", 
                 symbol="Sex_of_Driver")
+    fig_capacity.update_layout(
+        xaxis_title="Age of Driver",
+        yaxis_title="Engine Capacity",
+    )
     
-    idx = vehicles_cache.groupby(['Sex_of_Driver', 'Age_of_Driver'])['Engine_Capacity_(CC)'].transform(max) == vehicles_cache['Engine_Capacity_(CC)']
+    idx = vehicles_cache.groupby(['Sex_of_Driver'])['Engine_Capacity_(CC)'].transform(max) == vehicles_cache['Engine_Capacity_(CC)']
     max_df = vehicles_cache[idx]
-    for row in max_df:
+    max_df = pd.DataFrame(max_df)
+    for id, row in max_df.iterrows():
       fig_capacity.add_annotation(
             x=row["Age_of_Driver"],
             y=row["Engine_Capacity_(CC)"],
-            text=row["Highest CC"])
+            text="Highest CC")
 
     # Vehicles Manoeuvre / Number of Casualties
     vehicles_agg = accidents_vehicles.groupby(['Vehicle_Manoeuvre', 'Sex_of_Driver'], as_index=False).mean()
@@ -600,6 +614,10 @@ def build_vehicle_charts(veh_type, eng_cap, veh_man):
              y='Number_of_Casualties', 
              color='Sex_of_Driver', 
              barmode='group')
+    fig_loc_cas.update_layout(
+        xaxis_title="Vehicle Manoeuvre",
+        yaxis_title="Number of Casualties",
+    )
 
     # Vehicle Age / Weather
     vehicles_agg = accidents_vehicles.groupby(['Weather_Conditions', 'Road_Type'], as_index=False).mean()
@@ -608,6 +626,10 @@ def build_vehicle_charts(veh_type, eng_cap, veh_man):
              y='Age_of_Vehicle', 
              color='Road_Type', 
              barmode='group')
+    fig_age_weather.update_layout(
+        xaxis_title="Weather Conditions",
+        yaxis_title="Age of Vehicle",
+    )
 
     return fig_hist, fig_capacity, fig_loc_cas, fig_age_weather
 

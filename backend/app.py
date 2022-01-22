@@ -1,3 +1,4 @@
+from datetime import datetime
 from fastapi import FastAPI
 from typing import Optional
 import joblib
@@ -7,26 +8,24 @@ from pydantic import BaseModel
 #
 app = FastAPI()
 knn_model = None
+ohenc = None
 
 input_format_df = None
 
 class Item(BaseModel):
-    day_of_week: str
     first_road_class: str
     weather_conditions: str
     road_surface_conditions: str
-    special_conditions_at_site: str
     urban_or_rural_area: str
+    vehicle_type: str
     longitude: float
     latitude: float
-    daytime: str
-    season: str
-    vehicle_type: str
-
+    picked_date: datetime
+    
 @app.on_event("startup")
 async def startup_event():
-    filename = './model/finalized_model.pkl'
-    knn_model = joblib.load(filename)
+    knn_model = joblib.load('./model/finalized_model.pkl')
+    ohenc = joblib.load('./model/encoder.pkl')
 
 @app.get("/")
 def read_root():

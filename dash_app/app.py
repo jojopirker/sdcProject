@@ -231,7 +231,7 @@ def build_default(pathname):
     min_eng_cap = int(vehicles['Engine_Capacity_(CC)'].min())
     max_eng_cap = int(vehicles['Engine_Capacity_(CC)'].max())
     return html.Div([
-        html.H1(children='Vehicles Dashoard'),
+        html.H1(children='Involved Vehicles Dashoard'),
         html.Hr(),
         ## Filter
         dbc.Row([
@@ -546,7 +546,7 @@ def build_vehicle_charts(veh_type, eng_cap, veh_man):
                 color="Sex_of_Driver",
                 nbins=12)
 
-    fig_capacity = px.scatter(vehicles_cache[vehicles_cache['Age_of_Vehicle']>=0].sample(2000, random_state=1), # NEEDS TO BE ADAPTED
+    fig_capacity = px.scatter(vehicles_cache[vehicles_cache['Age_of_Vehicle']>=0], # NEEDS TO BE ADAPTED
                 x="Age_of_Driver", 
                 y="Engine_Capacity_(CC)", 
                 #color="Vehicle_Type", 

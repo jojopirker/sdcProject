@@ -167,6 +167,8 @@ def display_page(pathname):
 
 ## Vehicles Dash
 def build_default(pathname):
+    min_eng_cap = int(vehicles['Engine_Capacity_(CC)'].min())
+    max_eng_cap = int(vehicles['Engine_Capacity_(CC)'].max())
     return html.Div([
         html.H1(children='Vehicles Dashoard'),
         html.Hr(),
@@ -187,13 +189,13 @@ def build_default(pathname):
                 html.H3(children='Engine Capacity'),
                 dcc.RangeSlider(
                     id='eng-cap-slider',
-                    min=vehicles['Engine_Capacity_(CC)'].min(),
-                    max=vehicles['Engine_Capacity_(CC)'].max(),
+                    min=min_eng_cap,
+                    max=max_eng_cap,
                     step=1,
-                    value=[vehicles['Engine_Capacity_(CC)'].min(), vehicles['Engine_Capacity_(CC)'].max()],
+                    value=[min_eng_cap, max_eng_cap],
                     marks={
-                        vehicles['Engine_Capacity_(CC)'].min(): vehicles['Engine_Capacity_(CC)'].min(),
-                        vehicles['Engine_Capacity_(CC)'].max(): vehicles['Engine_Capacity_(CC)'].max()
+                        -1: 'Min',
+                        max_eng_cap: 'Max'
                     }
                 )
             ], width=4),

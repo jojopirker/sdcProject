@@ -169,13 +169,56 @@ def display_page(pathname):
 def build_default(pathname):
     return html.Div([
         html.H1(children='Vehicles Dashoard'),
-        dcc.DatePickerRange(
-            id='date-picker-page1',
-            min_date_allowed=accidents_monthly.index.min(),
-            max_date_allowed=accidents_monthly.index.max(),
-            start_date=accidents_monthly.index.min(),
-            end_date=accidents_monthly.index.max()
-        ),
+        html.Hr(),
+        dbc.Row([
+            # Date Range Filter
+            dbc.Col([
+                html.H3(children='Date Range'),
+                dcc.DatePickerRange(
+                    id='date-picker-page1',
+                    min_date_allowed=accidents_monthly.index.min(),
+                    max_date_allowed=accidents_monthly.index.max(),
+                    start_date=accidents_monthly.index.min(),
+                    end_date=accidents_monthly.index.max()
+                )
+            ], width=3),
+            # Accident Severity Filter
+            dbc.Col([
+                html.H3(children='Engine Capacity'),
+                dcc.RangeSlider(
+                    id='eng-cap-slider',
+                    min=vehicles['Engine_Capacity_(CC)'].min(),
+                    max=vehicles['Engine_Capacity_(CC)'].max(),
+                    step=1,
+                    value=[vehicles['Engine_Capacity_(CC)'].min(), vehicles['Engine_Capacity_(CC)'].max()],
+                    marks={
+                        vehicles['Engine_Capacity_(CC)'].min(): vehicles['Engine_Capacity_(CC)'].min(),
+                        vehicles['Engine_Capacity_(CC)'].max(): vehicles['Engine_Capacity_(CC)'].max()
+                    }
+                )
+            ], width=4),
+            # Light Conditions
+            dbc.Col([
+                html.H3(children='Vehicle Manoeuvre'),
+                dcc.Dropdown(
+                    id='veh-man-multi',
+                    options=[
+                        {'label': 'Reversing', 'value': 'Reversing'},
+                        {'label': 'Parked', 'value': 'Parked'},
+                        {'label': 'Waiting to go / turn', 'value': 'Waiting to go / turn'},
+                        {'label': 'Slowing or stopping', 'value': 'Slowing or stopping'},
+                        {'label': 'Turning', 'value': 'Turning'},
+                        {'label': 'Changing lane', 'value': 'Changing lane'},
+                        {'label': 'Overtaking', 'value': 'Overtaking'},
+                        {'label': 'Going ahead', 'value': 'Going ahead'},
+                        {'label': 'Data missing', 'value': 'Data missing or out of range'},
+                    ],
+                    value=['Reversing', 'Parked', 'Waiting to go / turn', 'Slowing or stopping', 'Turning', 'Overtaking'],
+                    multi=True
+                )
+            ], width=4),
+        ]),
+        html.Br(),
         ## VEHICLES
         # Vehicles Driver Age/sex Histogram
         dcc.Graph(
@@ -185,7 +228,6 @@ def build_default(pathname):
         dcc.Graph(
             id='vehicles-capacity', figure={}
         ),
-        html.H3('You are on page {}'.format(pathname)),
     ])
 
 ## Accidents Dash
@@ -304,7 +346,6 @@ def build_page_2(pathname):
             ], width=4),
         ]),
         html.Br(),
-        html.Div(id="test"),
         ## Charts
         dbc.Row([
             dbc.Col(dev_num_incidents, width=11),
@@ -332,7 +373,7 @@ def build_page_2(pathname):
                Input(component_id='acc-severity-slider', component_property='value'),
                Input(component_id='light-conditions-multi', component_property='value')])
 @cache.memoize(timeout=TIMEOUT)
-def build_accident_line_chart(start_date, end_date, acc_sev, light_con):
+def build_accident_charts(start_date, end_date, acc_sev, light_con):
     # Filter Date
     accidents_cache=accidents_ts[start_date:end_date]
     # Filter Accident Severity

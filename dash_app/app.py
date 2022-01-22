@@ -185,10 +185,36 @@ def build_default(pathname):
         [
             dbc.CardBody([
                 dbc.Row([
-                    dbc.Col(html.H4("Age of Driver ~ Engine Capacity based on Gender", className="card-title"),width=10),
+                    dbc.Col(html.H4("Age of Driver ~ Engine Capacity", className="card-title"),width=10),
                 ]),
                 dcc.Graph(
                     id='vehicles-capacity', figure={}
+                ),
+            ]),
+        ]
+    )
+    # Vehicles Location / Number of Casualties
+    vehicles_loc_casualties = dbc.Card(
+        [
+            dbc.CardBody([
+                dbc.Row([
+                    dbc.Col(html.H4("Histogram Driver's Age based on Gender", className="card-title"),width=10),
+                ]),
+                dcc.Graph(
+                    id='vehicles-loc-casualties', figure={}
+                ),
+            ]),
+        ]
+    )
+    # Vehicle Age / Weather
+    vehicle_age_weather = dbc.Card(
+        [
+            dbc.CardBody([
+                dbc.Row([
+                    dbc.Col(html.H4("Age of Driver ~ Engine Capacity", className="card-title"),width=10),
+                ]),
+                dcc.Graph(
+                    id='vehicles-age-weather', figure={}
                 ),
             ]),
         ]
@@ -270,6 +296,11 @@ def build_default(pathname):
         dbc.Row([
             dbc.Col(vehicles_hist, width=6),
             dbc.Col(vehicles_capacity, width=6),
+        ]),
+        html.Br(),
+        dbc.Row([
+            dbc.Col(vehicles_loc_casualties, width=6),
+            dbc.Col(vehicle_age_weather, width=6),
         ]),
         html.Br(),
     ])
@@ -487,7 +518,9 @@ def build_accident_charts(start_date, end_date, acc_sev, light_con):
 
 ## Callback Vehicles Dash
 @app.callback([Output('vehicles-hist', 'figure'),
-                Output('vehicles-capacity', 'figure')],
+                Output('vehicles-capacity', 'figure'),
+                Output('vehicles-loc-casualties', 'figure'),
+                Output('vehicles-age-weather', 'figure')],
               [Input(component_id='veh-type-multi', component_property='value'),
                Input(component_id='eng-cap-slider', component_property='value'),
                Input(component_id='veh-man-multi', component_property='value')])
@@ -507,7 +540,7 @@ def build_vehicle_charts(veh_type, eng_cap, veh_man):
                 color="Sex_of_Driver", 
                 symbol="Sex_of_Driver")
 
-    return fig_hist, fig_capacity
+    return fig_hist, fig_capacity, fig_hist, fig_capacity
 
 
 switcher = {

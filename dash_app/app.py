@@ -193,6 +193,7 @@ def build_default(pathname):
             ]),
         ]
     )
+    
     min_eng_cap = int(vehicles['Engine_Capacity_(CC)'].min())
     max_eng_cap = int(vehicles['Engine_Capacity_(CC)'].max())
     return html.Div([
@@ -202,28 +203,30 @@ def build_default(pathname):
         dbc.Row([
             # Date Range Filter
             dbc.Col([
-                html.H3(children='Date Range'),
-                dcc.DatePickerRange(
-                    id='date-picker-page1',
-                    min_date_allowed=accidents_monthly.index.min(),
-                    max_date_allowed=accidents_monthly.index.max(),
-                    start_date=accidents_monthly.index.min(),
-                    end_date=accidents_monthly.index.max()
-                )
-            ], width=3),
-            # Accident Severity Filter
-            dbc.Col([
-                html.H3(children='Engine Capacity'),
-                dcc.RangeSlider(
-                    id='eng-cap-slider',
-                    min=min_eng_cap,
-                    max=max_eng_cap,
-                    step=1,
-                    value=[min_eng_cap, max_eng_cap],
-                    marks={
-                        -1: 'Min',
-                        max_eng_cap: 'Max'
-                    }
+                html.H3(children='Vehicle Type'),
+                dcc.Dropdown(
+                    id='veh-type-multi',
+                    options=[
+                        {'label': 'Motorcycle 125cc and under', 'value': 'Motorcycle 125cc and under'},
+                        {'label': 'Motorcycle over 125cc', 'value': 'Motorcycle over 125cc'},
+                        {'label': 'Car', 'value': 'Car'},
+                        {'label': 'Minibus (8 - 16 passenger seats)', 'value': 'Minibus (8 - 16 passenger seats)'},
+                        {'label': 'Bus or coach (17 or more pass seats)', 'value': 'Bus or coach (17 or more pass seats)'},
+                        {'label': 'Ridden horse', 'value': 'Ridden horse'},
+                        {'label': 'Agricultural vehicle', 'value': 'Agricultural vehicle'},
+                        {'label': 'Tram', 'value': 'Tram'},
+                        {'label': 'Van / Goods 3.5 tonnes mgw or under', 'value': 'Van / Goods 3.5 tonnes mgw or under'},
+                        {'label': 'Goods over 3.5t. and under 7.5t', 'value': 'Goods over 3.5t. and under 7.5t'},
+                        {'label': 'Goods 7.5 tonnes mgw and over', 'value': 'Goods 7.5 tonnes mgw and over'},
+                        {'label': 'Mobility scooter', 'value': 'Mobility scooter'},
+                        {'label': 'Electric motorcycle', 'value': 'Electric motorcycle'},
+                        {'label': 'Other vehicle', 'value': 'Other vehicle'},
+                        {'label': 'Motorcycle - unknown cc', 'value': 'Motorcycle - unknown cc'},
+                        {'label': 'Goods vehicle - unknown weight', 'value': 'Goods vehicle - unknown weight'},
+                        {'label': 'Data missing', 'value': 'Data missing or out of range'},
+                    ],
+                    value=['Motorcycle 125cc and under', 'Motorcycle over 125cc', 'Car', 'Bus or coach (17 or more pass seats)'],
+                    multi=True
                 )
             ], width=4),
             # Light Conditions
@@ -246,6 +249,21 @@ def build_default(pathname):
                     multi=True
                 )
             ], width=4),
+            # Accident Severity Filter
+            dbc.Col([
+                html.H3(children='Engine Capacity'),
+                dcc.RangeSlider(
+                    id='eng-cap-slider',
+                    min=min_eng_cap,
+                    max=max_eng_cap,
+                    step=1,
+                    value=[min_eng_cap, max_eng_cap],
+                    marks={
+                        -1: 'Min',
+                        max_eng_cap: 'Max'
+                    }
+                )
+            ], width=3),
         ]),
         html.Br(),
         ## Charts
@@ -470,17 +488,18 @@ def build_accident_charts(start_date, end_date, acc_sev, light_con):
 ## Callback Vehicles Dash
 @app.callback([Output('vehicles-hist', 'figure'),
                 Output('vehicles-capacity', 'figure')],
-              [Input(component_id='date-picker-page1', component_property='start_date'),
-               Input(component_id='date-picker-page1', component_property='end_date')])
+              [Input(component_id='veh-type-multi', component_property='value'),
+               Input(component_id='eng-cap-slider', component_property='value'),
+               Input(component_id='veh-man-multi', component_property='value')])
 @cache.memoize(timeout=TIMEOUT)
-def build_vehicle_charts(start_date, end_date):
+def build_vehicle_charts(veh_type, eng_cap, veh_man):
     # VEHICLES
     fig_hist = px.histogram(vehicles[vehicles["Age_of_Driver"]>0], 
                 x="Age_of_Driver", 
                 color="Sex_of_Driver",
                 nbins=12)
 
-    fig_capacity = px.scatter(vehicles[vehicles['Age_of_Vehicle']>=0].sample(1000, random_state=1), # NEEDS TO BE ADAPTED
+    fig_capacity = px.scatter(vehicles[vehicles['Age_of_Vehicle']>=0].sample(2000, random_state=1), # NEEDS TO BE ADAPTED
                 x="Age_of_Driver", 
                 y="Engine_Capacity_(CC)", 
                 #color="Vehicle_Type", 
@@ -489,6 +508,7 @@ def build_vehicle_charts(start_date, end_date):
                 symbol="Sex_of_Driver")
 
     return fig_hist, fig_capacity
+
 
 switcher = {
     base_path+"page-2": build_page_2

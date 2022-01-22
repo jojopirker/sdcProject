@@ -167,11 +167,38 @@ def display_page(pathname):
 
 ## Vehicles Dash
 def build_default(pathname):
+    # Vehicles Driver Age/sex Histogram
+    vehicles_hist = dbc.Card(
+        [
+            dbc.CardBody([
+                dbc.Row([
+                    dbc.Col(html.H4("Histogram Driver's Age based on Gender", className="card-title"),width=10),
+                ]),
+                dcc.Graph(
+                    id='vehicles-hist', figure={}
+                ),
+            ]),
+        ]
+    )
+    # Engine Capacity
+    vehicles_capacity = dbc.Card(
+        [
+            dbc.CardBody([
+                dbc.Row([
+                    dbc.Col(html.H4("Age of Driver ~ Engine Capacity based on Gender", className="card-title"),width=10),
+                ]),
+                dcc.Graph(
+                    id='vehicles-capacity', figure={}
+                ),
+            ]),
+        ]
+    )
     min_eng_cap = int(vehicles['Engine_Capacity_(CC)'].min())
     max_eng_cap = int(vehicles['Engine_Capacity_(CC)'].max())
     return html.Div([
         html.H1(children='Vehicles Dashoard'),
         html.Hr(),
+        ## Filter
         dbc.Row([
             # Date Range Filter
             dbc.Col([
@@ -221,15 +248,12 @@ def build_default(pathname):
             ], width=4),
         ]),
         html.Br(),
-        ## VEHICLES
-        # Vehicles Driver Age/sex Histogram
-        dcc.Graph(
-            id='vehicles-hist', figure={}
-        ),
-        # Engine Capacity
-        dcc.Graph(
-            id='vehicles-capacity', figure={}
-        ),
+        ## Charts
+        dbc.Row([
+            dbc.Col(vehicles_hist, width=6),
+            dbc.Col(vehicles_capacity, width=6),
+        ]),
+        html.Br(),
     ])
 
 ## Accidents Dash
@@ -244,7 +268,6 @@ def build_page_2(pathname):
             ]),
         ]
     )
-    
     map_incidents = dbc.Card(
         [
             dbc.CardBody([
@@ -258,7 +281,6 @@ def build_page_2(pathname):
             ]),
         ]
     )
-
     road_weather = dbc.Card(
         [
             dbc.CardBody([
@@ -283,7 +305,6 @@ def build_page_2(pathname):
             ]),
         ]
     )
-    
     speed_casualties_weekday = dbc.Card(
         [
             dbc.CardBody([
@@ -453,18 +474,20 @@ def build_accident_charts(start_date, end_date, acc_sev, light_con):
                Input(component_id='date-picker-page1', component_property='end_date')])
 @cache.memoize(timeout=TIMEOUT)
 def build_vehicle_charts(start_date, end_date):
-# VEHICLES
+    # VEHICLES
     fig_hist = px.histogram(vehicles[vehicles["Age_of_Driver"]>0], 
-                   x="Age_of_Driver", 
-                  color="Sex_of_Driver",
-                  nbins=12)
+                x="Age_of_Driver", 
+                color="Sex_of_Driver",
+                nbins=12)
 
     fig_capacity = px.scatter(vehicles[vehicles['Age_of_Vehicle']>=0].sample(1000, random_state=1), # NEEDS TO BE ADAPTED
-                 x="Age_of_Driver", 
-                 y="Engine_Capacity_(CC)", 
-                 color="Vehicle_Type", 
-                 size='Age_of_Vehicle',
-                 symbol="Sex_of_Driver")
+                x="Age_of_Driver", 
+                y="Engine_Capacity_(CC)", 
+                #color="Vehicle_Type", 
+                #size='Age_of_Vehicle',
+                color="Sex_of_Driver", 
+                symbol="Sex_of_Driver")
+
     return fig_hist, fig_capacity
 
 switcher = {

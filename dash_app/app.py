@@ -491,10 +491,9 @@ def build_accident_charts(start_date, end_date, acc_sev, light_con):
         showlegend = False,
         mode="markers",
         marker = dict(
-            size = accidents_cache["Speed_limit"],
             color = accidents_cache["Number_of_Casualties"],
             colorscale = 'Jet',
-            line = dict(width=0.5, color='rgb(40,40,40)'),
+            line = dict(width=0.5, color='rgb(60,60,60)'),
             sizemode = 'area',
             showscale = True
         )

@@ -206,7 +206,7 @@ def build_default(pathname):
         [
             dbc.CardBody([
                 dbc.Row([
-                    dbc.Col(html.H4("Number of Casualties based on Vehicles Manoeuvre", className="card-title"),width=10),
+                    dbc.Col(html.H4("Casualties based on Vehicles Manoeuvre", className="card-title"),width=10),
                 ]),
                 dcc.Graph(
                     id='vehicles-loc-casualties', figure={}

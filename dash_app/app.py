@@ -539,7 +539,9 @@ def build_vehicle_charts(veh_type, eng_cap, veh_man):
     vehicles_cache = vehicles_cache[vehicles_cache['Vehicle_Type'].isin(veh_type)]
     vehicles_cache = vehicles_cache[vehicles_cache['Vehicle_Manoeuvre'].isin(veh_man)]
     vehicles_cache = vehicles_cache[vehicles_cache['Engine_Capacity_(CC)'].between(int(eng_cap[0]), int(eng_cap[1]))]
-    
+    # Join
+    accidents_vehicles = accidents_ts.join(vehicles_cache.set_index('Accident_Index'))
+
     # Charts
     fig_hist = px.histogram(vehicles_cache[vehicles_cache["Age_of_Driver"]>0], 
                 x="Age_of_Driver", 
@@ -554,7 +556,23 @@ def build_vehicle_charts(veh_type, eng_cap, veh_man):
                 color="Sex_of_Driver", 
                 symbol="Sex_of_Driver")
 
-    return fig_hist, fig_capacity, fig_hist, fig_capacity
+    # Vehicles Manoeuvre / Number of Casualties
+    vehicles_agg = accidents_vehicles.groupby(['Vehicle_Manoeuvre', 'Sex_of_Driver'], as_index=False).sum()
+    fig_loc_cas = px.bar(vehicles_agg, 
+             x='Vehicle_Manoeuvre', 
+             y='Number_of_Casualties', 
+             color='Sex_of_Driver', 
+             barmode='group')
+
+    # Vehicle Age / Weather
+    vehicles_agg = accidents_vehicles.groupby(['Weather_Conditions'], as_index=False).mean()
+    fig_age_weather = px.bar(accidents_vehicles, 
+             x='Weather_Conditions', 
+             y='Age_of_Vehicle', 
+             color='Weather_Conditions', 
+             barmode='group')
+
+    return fig_hist, fig_capacity, fig_loc_cas, fig_age_weather
 
 
 switcher = {

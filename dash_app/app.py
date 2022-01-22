@@ -527,7 +527,8 @@ def build_accident_charts(start_date, end_date, acc_sev, light_con):
         legend_title="Legend"
     )
 
-    fig_rel_speed_casualties = px.scatter(accidents_cache.nlargest(50, 'Number_of_Casualties'), 
+    n = 50 if len(accidents_cache.index) > 50 else len(accidents_cache.index) 
+    fig_rel_speed_casualties = px.scatter(accidents_cache.nlargest(n, 'Number_of_Casualties'), 
         x="Number_of_Casualties", 
         y="Speed_limit",
         color = "Number_of_Vehicles",

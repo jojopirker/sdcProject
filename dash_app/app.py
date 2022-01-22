@@ -126,6 +126,14 @@ accidents_ts.set_index('accident_time', drop=True, inplace=True)
 accidents_monthly = accidents_ts.resample('M').agg({'Accident_Index':'size'})
 accidents_monthly['Moving Average'] = accidents_monthly.rolling(window=5).mean()
 
+vehicles["Vehicle_Type"].replace({
+    "Motorcycle 125cc and under": "Motorcycle 125cc and under", 
+    "Motorcycle 50cc and under": "Motorcycle 125cc and under",
+    "Motorcycle over 125cc and up to 500cc":"Motorcycle over 125cc",
+    "Motorcycle over 500cc": "Motorcycle over 125cc",
+    "Taxi/Private hire car": "Car"
+}, inplace=True)
+
 #####################
 ##
 ##
@@ -526,13 +534,19 @@ def build_accident_charts(start_date, end_date, acc_sev, light_con):
                Input(component_id='veh-man-multi', component_property='value')])
 @cache.memoize(timeout=TIMEOUT)
 def build_vehicle_charts(veh_type, eng_cap, veh_man):
-    # VEHICLES
-    fig_hist = px.histogram(vehicles[vehicles["Age_of_Driver"]>0], 
+    # Filters
+    vehicles_cache = vehicles.copy()
+    vehicles_cache = vehicles_cache[vehicles_cache['Vehicle_Type'].isin(veh_type)]
+    vehicles_cache = vehicles_cache[vehicles_cache['Vehicle_Manoeuvre'].isin(veh_man)]
+    vehicles_cache = vehicles_cache[vehicles_cache['Engine_Capacity_(CC)'].between(int(eng_cap[0]), int(eng_cap[1]))]
+    
+    # Charts
+    fig_hist = px.histogram(vehicles_cache[vehicles_cache["Age_of_Driver"]>0], 
                 x="Age_of_Driver", 
                 color="Sex_of_Driver",
                 nbins=12)
 
-    fig_capacity = px.scatter(vehicles[vehicles['Age_of_Vehicle']>=0].sample(2000, random_state=1), # NEEDS TO BE ADAPTED
+    fig_capacity = px.scatter(vehicles_cache[vehicles_cache['Age_of_Vehicle']>=0].sample(2000, random_state=1), # NEEDS TO BE ADAPTED
                 x="Age_of_Driver", 
                 y="Engine_Capacity_(CC)", 
                 #color="Vehicle_Type", 

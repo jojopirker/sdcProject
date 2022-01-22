@@ -487,9 +487,17 @@ def build_accident_charts(start_date, end_date, acc_sev, light_con):
     fig_map = go.Figure(go.Scattergeo(
         lat=accidents_cache["Latitude"],
         lon=accidents_cache["Longitude"],
-        text=accidents_cache["1st_Road_Number"],
+        text=accidents_cache["Accident_Severity"],
+        showlegend = False,
         mode="markers",
-        marker_color=accidents_cache["Speed_limit"],
+        marker = dict(
+            #size = (cit['Population (2011)[3]'] / 2000).tolist(),
+            color = accidents_cache["Speed_limit"],
+            colorscale = 'Jet',
+            #line = dict(width=0.5, color='rgb(40,40,40)'),
+            #sizemode = 'area',
+            showscale = True
+        )
     ))
     fig_map.update_geos(
         lataxis_range=[50.10319,60.15456],
@@ -502,7 +510,7 @@ def build_accident_charts(start_date, end_date, acc_sev, light_con):
         showsubunits=True, 
         subunitcolor="Blue",
         showcoastlines=True, coastlinecolor="RebeccaPurple",
-        showland=True, landcolor="LightGreen",
+        showland=True, landcolor = 'rgb(50,50,50)',
         showocean=True, oceancolor="LightBlue",
         showlakes=True, lakecolor="Blue",
         showrivers=True, rivercolor="Blue")
@@ -550,7 +558,7 @@ def build_vehicle_charts(veh_type, eng_cap, veh_man):
         'Changing lane': ['Changing lane to left', 'Changing lane to right'],  
         'Overtaking': ['Overtaking moving vehicle - offside', 'Overtaking static vehicle - offside', 'Overtaking - nearside'],  
         'Going ahead': ['Going ahead left-hand bend', 'Going ahead right-hand bend', 'Going ahead other'],  
-        'Data missing': ['Data missing or out of range'],  
+        'Data missing or out of range': ['Data missing or out of range']
     }
     veh_man_trans=[]
     for man in veh_man:
@@ -576,6 +584,14 @@ def build_vehicle_charts(veh_type, eng_cap, veh_man):
                 #size='Age_of_Vehicle',
                 color="Sex_of_Driver", 
                 symbol="Sex_of_Driver")
+    
+    idx = vehicles_cache.groupby(['Sex_of_Driver', 'Age_of_Driver'])['Engine_Capacity_(CC)'].transform(max) == vehicles_cache['Engine_Capacity_(CC)']
+    max_df = vehicles_cache[idx]
+    for row in max_df:
+      fig_capacity.add_annotation(
+            x=row["Age_of_Driver"],
+            y=row["Engine_Capacity_(CC)"],
+            text=row["Highest CC"])
 
     # Vehicles Manoeuvre / Number of Casualties
     vehicles_agg = accidents_vehicles.groupby(['Vehicle_Manoeuvre', 'Sex_of_Driver'], as_index=False).mean()
@@ -586,7 +602,7 @@ def build_vehicle_charts(veh_type, eng_cap, veh_man):
              barmode='group')
 
     # Vehicle Age / Weather
-    vehicles_agg = accidents_vehicles.groupby(['Weather_Conditions', 'Road_Type'])['Age_of_Vehicle'].mean()
+    vehicles_agg = accidents_vehicles.groupby(['Weather_Conditions', 'Road_Type'], as_index=False).mean()
     fig_age_weather = px.bar(vehicles_agg, 
              x='Weather_Conditions', 
              y='Age_of_Vehicle', 

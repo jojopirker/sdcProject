@@ -5,6 +5,7 @@ import GeneralInformation from './components/GeneralInformation';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import APIOverview from './components/APIOverview';
+import MLPrediction from './components/MLPrediction';
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
             <DashIntegration route={"page-2"} />} />
           <Route path="/apiOverview" element={
             <APIOverview />} />
+          <Route path="/mlPrediction" element={
+            <MLPrediction />} />
         </Routes>
       </BrowserRouter>
     </div>

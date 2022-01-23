@@ -75,8 +75,8 @@ export const MLPrediction = () => {
             <Container>
                 <h1>Test the ML model</h1>
                 <Row>
-                    <Col>
-                        <Map center={center} zoom={zoom} style={{ height: '65vh', width: '15wh' }}>
+                    <Col xs={12} md={6}>
+                        <Map center={center} zoom={zoom} style={{ height: '75vh'}}>
                             <TileLayer
                                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -90,7 +90,7 @@ export const MLPrediction = () => {
                             </Marker>
                         </Map>
                     </Col>
-                    <Col>
+                    <Col xs={12} md={6}>
                         <Row>
                             <label htmlFor="1st_Road_Class">Choose a value for "1st_Road_Class":</label>
                             <select name="1st_Road_Class" id="1st_Road_Class" 
@@ -182,7 +182,7 @@ export const MLPrediction = () => {
                         </Row>
                         <Row style={{ marginTop: "5px" }}>
                         {loading && <h2 className='text-center'><Spinner animation="border" /></h2>}
-                        {answer && <h3>Predicted Sevirity is: <b>{answer}</b></h3>}
+                        {!loading && answer && <h3>Predicted Sevirity is: <b>{answer}</b></h3>}
                         </Row>
                     </Col>
                 </Row>

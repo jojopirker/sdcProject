@@ -1,7 +1,5 @@
 import React from 'react'
-import { Table } from 'react-bootstrap'
-import Container from 'react-bootstrap/Container'
-
+import { Table, Container } from 'react-bootstrap'
 /**
  * 
  * @returns GeneralInformation Component
@@ -42,7 +40,7 @@ const GeneralInformation = () => {
             </tbody>
           </Table>
           <h2>Deployment</h2>
-          <img src='infrastructure.jpeg' alt='Deployment Diagram'/>
+          <img src='infrastructure.jpeg' alt='Deployment Diagram' style={{maxWidth:"100%"}} />
           <h2>Structure</h2>
           <p>
             Through the Navigation the Dashboards and the severity accident prediction API can be reached.

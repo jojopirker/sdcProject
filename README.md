@@ -121,7 +121,7 @@ env-cmd | env-cmd is used and does not work. | run commands found under *Build*
 - [x] Add Filters to Dash App 1
 - [x] Add Filters to Dash App 2
 - [x] Setup Azure AppServices
-- [ ] Update backend with model
+- [x] Update backend with model
 - [ ] Add Data Table Overview to GeneralInformation Page
 
 

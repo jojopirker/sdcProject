@@ -40,7 +40,7 @@ const GeneralInformation = () => {
             </tbody>
           </Table>
           <h2>Deployment</h2>
-          Below is schematic of our pipline for deployment:<br />
+          Below is a schematic of our pipline for deployment:<br />
           <img src='actions.png' alt='Deployment Diagram' style={{maxWidth:"100%"}} /><br />
           And here a little overview of the infrastructure used in deployment:<br />
           <img src='infrastructure.jpeg' alt='Deployment Diagram' style={{maxWidth:"100%"}} />

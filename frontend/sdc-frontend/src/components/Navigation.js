@@ -20,8 +20,8 @@ const Navigation = ()=> {
                   <NavDropdown.Item href="dash-2">Accidents Dashoard</NavDropdown.Item>
                   <NavDropdown.Item href="dash-1">Vehicles Dashboard</NavDropdown.Item>
                 </NavDropdown>
-                <Nav.Link href="mlPrediction">Test ML model</Nav.Link>
                 <Nav.Link href="apiOverview">ML API</Nav.Link>
+                <Nav.Link href="mlPrediction">Test ML model</Nav.Link>
               </Nav>
             </Navbar.Collapse>
           </Container>

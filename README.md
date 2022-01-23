@@ -42,7 +42,7 @@ __Pipline Status__
 
 The current deployed version can be visited under: http://sdc-project.azurewebsites.net. It gets automatically built and pushed on every new commit. 
 
-*Below is schematic of our pipline for deployment:*
+*Below is a schematic of our pipline for deployment:*
 
 ![Pipleines](https://github.com/ds20m007/sdcProject/blob/main/etc/actions.png)
 

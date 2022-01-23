@@ -8,7 +8,15 @@ from pydantic import BaseModel
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import OneHotEncoder
 
-app = FastAPI(debug=True)
+description = """
+UK Accidents ML Model API helps predict servirity of accidents in the UK. 
+🚗🚗🚗🚗🚗🚗
+"""
+
+
+app = FastAPI(title="UK Accidents ML Model",
+description=description,
+version="1.0")
 global knn_model 
 global ohenc 
 
@@ -53,11 +61,8 @@ async def startup_event():
     global ohenc 
     ohenc = joblib.load('./model/encoder.pkl')
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
 
-@app.post("/items")
+@app.post("/predict")
 def ask_model(item: Item):
     hour = item.picked_date.hour
     daytime = getDayTime(hour)
@@ -77,6 +82,3 @@ def ask_model(item: Item):
     result = knn_model.predict(input_Final) 
     return {"accident_severty":result[0]}
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    return {"item_id": item_id, "q": q}

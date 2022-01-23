@@ -6,9 +6,9 @@ import 'leaflet/dist/leaflet.css';
 
 export const MLPrediction = () => {
     // Map variables
-    const [currentPos, setCurrentPos] = useState([54, -3]);
-    const markerRef = useRef([54, -3])
-    const center = [54, -3]
+    const [currentPos, setCurrentPos] = useState([55.4, -3.5]);
+    const markerRef = useRef([55.4, -3.5])
+    const center = [55.4, -3.5]
     const zoom = 5
     const eventHandlers = useMemo(
         () => ({
@@ -182,7 +182,7 @@ export const MLPrediction = () => {
                         </Row>
                         <Row style={{ marginTop: "5px" }}>
                         {loading && <h2 className='text-center'><Spinner animation="border" /></h2>}
-                        {!loading && answer && <h3>Predicted Sevirity is: <b>{answer}</b></h3>}
+                        {!loading && answer && <h3>Predicted Severity is: <b>{answer}</b></h3>}
                         </Row>
                     </Col>
                 </Row>

@@ -9,7 +9,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import OneHotEncoder
 
 description = """
-UK Accidents ML Model API helps predict servirity of accidents in the UK. 
+UK Accidents ML Model API helps predict serverity of accidents in the UK. 
 🚗🚗🚗🚗🚗🚗
 """
 

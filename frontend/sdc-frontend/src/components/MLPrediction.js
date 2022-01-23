@@ -57,7 +57,7 @@ export const MLPrediction = () => {
             "picked_date": date.toString()}
         console.log(data);
         setLoading(true);
-        await fetch(`${process.env.REACT_APP_API}/items`, {
+        await fetch(`${process.env.REACT_APP_API}/predict`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

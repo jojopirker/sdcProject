@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef } from 'react';
 import { MapContainer as Map, TileLayer, Marker } from 'react-leaflet';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button,Spinner } from 'react-bootstrap';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -15,7 +15,8 @@ export const MLPrediction = () => {
             dragend() {
                 const marker = markerRef.current
                 if (marker != null) {
-                    setCurrentPos(marker.getLatLng())
+                    const tmpPos = marker.getLatLng();
+                    setCurrentPos([tmpPos.lat,tmpPos.lng])
                 }
             },
         }),
@@ -33,13 +34,16 @@ export const MLPrediction = () => {
     });
 
     // prediction vars
-    const [first_road_class, setFirst_road_class] = useState("");
-    const [weather_conditions, setWeather_conditions] = useState("");
-    const [surface_condition, setSurface_condition] = useState("");
-    const [urbanOrRural, setUrbanOrRural] = useState("");
-    const [vehicle_Type, setVehicle_Type] = useState("");
+    const [first_road_class, setFirst_road_class] = useState("A");
+    const [weather_conditions, setWeather_conditions] = useState("Fine no high winds");
+    const [surface_condition, setSurface_condition] = useState("Dry");
+    const [urbanOrRural, setUrbanOrRural] = useState("Urban");
+    const [vehicle_Type, setVehicle_Type] = useState("Ridden horse");
     const [date, setDate] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [answer, setAnswer] = useState("");
 
+    const canSubmit = () => date && first_road_class && weather_conditions && surface_condition && urbanOrRural && vehicle_Type;
 
     const handleSubmit = async () => {
         var data = {
@@ -48,10 +52,22 @@ export const MLPrediction = () => {
             "road_surface_conditions": surface_condition,
             "urban_or_rural_area": urbanOrRural,
             "vehicle_type": vehicle_Type,
-            "longitude": currentPos[0],
-            "latitude": currentPos[1],
+            "longitude": currentPos[1],
+            "latitude": currentPos[0],
             "picked_date": date.toString()}
         console.log(data);
+        setLoading(true);
+        await fetch(`${process.env.REACT_APP_API}/items`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data) 
+          }).then((response)=>response.json()).then((data)=>{
+            setLoading(false);
+            console.log(data);
+            setAnswer(data.accident_severty);
+          });
     }
 
     return (
@@ -76,8 +92,10 @@ export const MLPrediction = () => {
                     </Col>
                     <Col>
                         <Row>
-                            <label for="1st_Road_Class">Choose a value for "1st_Road_Class":</label>
-                            <select name="1st_Road_Class" id="1st_Road_Class" onChange={e => setFirst_road_class(e.target.value)}>
+                            <label htmlFor="1st_Road_Class">Choose a value for "1st_Road_Class":</label>
+                            <select name="1st_Road_Class" id="1st_Road_Class" 
+                            onChange={e => setFirst_road_class(e.target.value)} 
+                            value={first_road_class}>
                                 <option value="A">A</option>
                                 <option value="B">B</option>
                                 <option value="C">C</option>
@@ -86,8 +104,10 @@ export const MLPrediction = () => {
                             </select>
                         </Row>
                         <Row>
-                            <label for="weather_condition">Choose a weather condition:</label>
-                            <select name="weather_condition" id="weather_condition" onChange={e => setWeather_conditions(e.target.value)}>
+                            <label htmlFor="weather_condition">Choose a weather condition:</label>
+                            <select name="weather_condition" id="weather_condition" 
+                            onChange={e => setWeather_conditions(e.target.value)}
+                            value={weather_conditions}>
                                 <option value="Fine no high winds">Fine no high winds</option>
                                 <option value="Raining no high winds">Raining no high winds</option>
                                 <option value="Snowing no high winds">Snowing no high winds</option>
@@ -101,8 +121,10 @@ export const MLPrediction = () => {
                             </select>
                         </Row>
                         <Row>
-                            <label for="surface_condition">Choose road surface conditions:</label>
-                            <select name="surface_condition" id="surface_condition" onChange={e => setSurface_condition(e.target.value)}>
+                            <label htmlFor="surface_condition">Choose road surface conditions:</label>
+                            <select name="surface_condition" id="surface_condition" 
+                            onChange={e => setSurface_condition(e.target.value)}
+                            value={surface_condition}>
                                 <option value="Dry">Dry</option>
                                 <option value="Wet or damp">Wet or damp</option>
                                 <option value="Frost or ice">Frost or ice</option>
@@ -112,16 +134,20 @@ export const MLPrediction = () => {
                             </select>
                         </Row>
                         <Row>
-                            <label for="urban_or_rural">Choose urban or rural area:</label>
-                            <select name="urban_or_rural" id="urban_or_rural" onChange={e => setUrbanOrRural(e.target.value)}>
+                            <label htmlFor="urban_or_rural">Choose urban or rural area:</label>
+                            <select name="urban_or_rural" id="urban_or_rural" 
+                            onChange={e => setUrbanOrRural(e.target.value)}
+                            value={urbanOrRural}>
                                 <option value="Urban">Urban</option>
                                 <option value="Rural">Rural</option>
                                 <option value="Unallocated">Unallocated</option>
                             </select>
                         </Row>
                         <Row>
-                            <label for="Vehicle_Type">Choose a Vehicle Type:</label>
-                            <select name="Vehicle_Type" id="Vehicle_Type" onChange={e => setVehicle_Type(e.target.value)}>
+                            <label htmlFor="Vehicle_Type">Choose a Vehicle Type:</label>
+                            <select name="Vehicle_Type" id="Vehicle_Type" 
+                            onChange={e => setVehicle_Type(e.target.value)}
+                            value={vehicle_Type}>
                                 <option value="Car">Car</option>
                                 <option value="Ridden horse">Ridden horse</option>
                                 <option value="Pedal cycle">Pedal cycle</option>
@@ -146,13 +172,17 @@ export const MLPrediction = () => {
                             </select>
                         </Row>
                         <Row>
-                            <label for="dateTime">Choose a time and day:</label>
-                            <input name="dateTime" id="dateTime" type="datetime-local" onChange={e => setDate(e.target.value)}>
-
+                            <label htmlFor="dateTime">Choose a time and day:</label>
+                            <input name="dateTime" id="dateTime" type="datetime-local" 
+                            onChange={e => setDate(e.target.value)}>
                             </input>
                         </Row>
                         <Row style={{ marginTop: "5px" }}>
-                            <Button onClick={handleSubmit}>Ask omniscient model</Button>
+                            <Button onClick={handleSubmit} disabled={!canSubmit()}>Ask omniscient model</Button>
+                        </Row>
+                        <Row style={{ marginTop: "5px" }}>
+                        {loading && <h2 className='text-center'><Spinner animation="border" /></h2>}
+                        {answer && <h3>Predicted Sevirity is: <b>{answer}</b></h3>}
                         </Row>
                     </Col>
                 </Row>

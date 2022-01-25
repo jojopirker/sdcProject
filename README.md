@@ -57,12 +57,12 @@ The structure of this repo is the following:
 
 Folder | Details  
 --- | ---
-/backend | contains all the files for our backend
-/frontend | contains all our frontend files 
-/dash_app | contains the dash app, which is integrated into our frontend 
-/data | empty folder for local usage, see /data/README.md 
-/etc | contains additional content for the project (for example pics) 
-/notebooks | contains all the notebooks used for data analysis etc. 
+*/backend* | contains all the files for our backend
+*/frontend* | contains all our frontend files 
+*/dash_app* | contains the dash app, which is integrated into our frontend 
+*/data* | empty folder for local usage, see /data/README.md 
+*/etc* | contains additional content for the project (for example pics) 
+*/notebooks* | contains all the notebooks used for data analysis etc. 
 
 ## Build
 First you'll need to install node.js. Then you can build the frontend. Inside the **/frontend/sdc-frontend/** folder run:
@@ -124,7 +124,6 @@ env-cmd | env-cmd is used and does not work. | run commands found under *Build*
 - [x] Add Filters to Dash App 2
 - [x] Setup Azure AppServices
 - [x] Update backend with model
-- [ ] Add Data Table Overview to GeneralInformation Page
 
 
 

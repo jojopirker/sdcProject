@@ -1,6 +1,7 @@
 # Solution Deployment and Communication Project
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Status](https://img.shields.io/website?label=frontend&url=http%3A%2F%2Fsdc-project.azurewebsites.net)
 
 This is the Github Page for our SDC Project.
 

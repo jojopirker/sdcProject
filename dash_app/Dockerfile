@@ -14,6 +14,9 @@ WORKDIR /data
 RUN kaggle datasets download benoit72/uk-accidents-10-years-history-with-many-variables
 RUN unzip uk-accidents-10-years-history-with-many-variables.zip
 
+ENV KAGGLE_USERNAME=foo
+ENV KAGGLE_KEY=bar
+
 WORKDIR /app
 # pip packages
 COPY requirements.txt requirements.txt
